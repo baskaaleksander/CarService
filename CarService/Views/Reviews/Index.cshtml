@@ -1,0 +1,77 @@
+@model IEnumerable<Review>
+@{
+    ViewData["Title"] = "Reviews";
+    var averageRating = (decimal?)ViewBag.AverageRating ?? 0;
+}
+
+<h1>Customer Reviews</h1>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h2 class="card-title display-4">
+                    @averageRating.ToString("0.0")
+                </h2>
+                <div class="mb-2">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        if (i <= Math.Round(averageRating))
+                        {
+                            <span class="text-warning fs-4">&#9733;</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted fs-4">&#9733;</span>
+                        }
+                    }
+                </div>
+                <p class="text-muted">Average Rating</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No reviews yet. Be the first to leave a review!</div>
+}
+else
+{
+    <div class="row">
+        @foreach (var review in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="mb-2">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= review.Rating)
+                                {
+                                    <span class="text-warning">&#9733;</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">&#9733;</span>
+                                }
+                            }
+                            <span class="ms-2 text-muted">(@review.Rating/5)</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(review.Comment))
+                        {
+                            <p class="card-text">@review.Comment</p>
+                        }
+                        else
+                        {
+                            <p class="card-text text-muted fst-italic">No comment provided.</p>
+                        }
+                    </div>
+                    <div class="card-footer text-muted">
+                        <small>@review.CreatedAt.ToString("MMMM dd, yyyy")</small>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

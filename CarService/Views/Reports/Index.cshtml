@@ -1,0 +1,101 @@
+@using CarService.Services.Interfaces
+@model DashboardStatsDto
+@{
+    ViewData["Title"] = "Reports Dashboard";
+}
+
+<h1>Reports Dashboard</h1>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-uppercase">Total Orders</h6>
+                        <h2 class="mb-0">@Model.TotalOrders</h2>
+                    </div>
+                    <div class="fs-1 opacity-50">
+                        &#128203;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-dark bg-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-uppercase">Pending Orders</h6>
+                        <h2 class="mb-0">@Model.PendingOrders</h2>
+                    </div>
+                    <div class="fs-1 opacity-50">
+                        &#9203;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-uppercase">Active Mechanics</h6>
+                        <h2 class="mb-0">@Model.ActiveMechanics</h2>
+                    </div>
+                    <div class="fs-1 opacity-50">
+                        &#128736;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-uppercase">Month Revenue</h6>
+                        <h2 class="mb-0">@Model.MonthRevenue.ToString("C")</h2>
+                    </div>
+                    <div class="fs-1 opacity-50">
+                        &#128176;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4>Detailed Reports</h4>
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Revenue Report</h5>
+                <p class="card-text">View monthly revenue statistics and trends.</p>
+                <a asp-action="Revenue" class="btn btn-outline-primary">View Report</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Popular Services</h5>
+                <p class="card-text">See the most requested services and their revenue.</p>
+                <a asp-action="PopularServices" class="btn btn-outline-primary">View Report</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Mechanic Efficiency</h5>
+                <p class="card-text">Analyze mechanic performance and completion rates.</p>
+                <a asp-action="MechanicEfficiency" class="btn btn-outline-primary">View Report</a>
+            </div>
+        </div>
+    </div>
+</div>

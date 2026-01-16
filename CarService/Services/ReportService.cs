@@ -17,46 +17,59 @@ namespace CarService.Services
 
         public async Task<IEnumerable<MonthlyRevenueDto>> GetMonthlyRevenueAsync(int year)
         {
-            return await _context.ServiceOrders
+            var orders = await _context.ServiceOrders
                 .Where(o => o.CompletedAt.HasValue && o.CompletedAt.Value.Year == year)
-                .GroupBy(o => o.CompletedAt!.Value.Month)
+                .Select(o => new { Month = o.CompletedAt!.Value.Month, o.TotalCost })
+                .ToListAsync();
+
+            return orders
+                .GroupBy(o => o.Month)
                 .Select(g => new MonthlyRevenueDto(
                     g.Key,
                     CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(g.Key),
                     g.Sum(o => o.TotalCost),
                     g.Count()
                 ))
-                .ToListAsync();
+                .OrderBy(x => x.Month)
+                .ToList();
         }
 
         public async Task<IEnumerable<PopularServiceDto>> GetPopularServicesAsync(int topN = 10)
         {
-            return await _context.ServiceOrderItems
+            var items = await _context.ServiceOrderItems
                 .Where(i => i.ServiceId.HasValue)
-                .GroupBy(i => new { i.ServiceId, i.Service!.Name })
+                .Select(i => new { i.ServiceId, ServiceName = i.Service!.Name, i.Quantity, i.UnitPrice })
+                .ToListAsync();
+
+            return items
+                .GroupBy(i => new { i.ServiceId, i.ServiceName })
                 .Select(g => new PopularServiceDto(
                     g.Key.ServiceId!.Value,
-                    g.Key.Name,
+                    g.Key.ServiceName,
                     g.Count(),
                     g.Sum(i => i.Quantity * i.UnitPrice)
                 ))
                 .OrderByDescending(x => x.UsageCount)
                 .Take(topN)
-                .ToListAsync();
+                .ToList();
         }
 
         public async Task<IEnumerable<MechanicEfficiencyDto>> GetMechanicEfficiencyAsync()
         {
-            return await _context.ServiceOrders
+            var orders = await _context.ServiceOrders
                 .Where(o => o.MechanicId != null && o.Status == ServiceOrderStatus.Completed)
-                .GroupBy(o => new { o.MechanicId, o.Mechanic!.FirstName, o.Mechanic.LastName })
+                .Select(o => new { o.MechanicId, o.Mechanic!.FirstName, o.Mechanic.LastName, o.LaborHours })
+                .ToListAsync();
+
+            return orders
+                .GroupBy(o => new { o.MechanicId, o.FirstName, o.LastName })
                 .Select(g => new MechanicEfficiencyDto(
                     g.Key.MechanicId!,
                     $"{g.Key.FirstName} {g.Key.LastName}",
                     g.Count(),
-                    g.Average(o => o.LaborHours)
+                    g.Any() ? g.Average(o => o.LaborHours) : 0
                 ))
-                .ToListAsync();
+                .ToList();
         }
 
         public async Task<DashboardStatsDto> GetDashboardStatsAsync()
@@ -74,11 +87,14 @@ namespace CarService.Services
                 .CountAsync();
 
             var now = DateTime.UtcNow;
-            var monthRevenue = await _context.ServiceOrders
+            var monthOrderTotals = await _context.ServiceOrders
                 .Where(o => o.CompletedAt.HasValue && 
                            o.CompletedAt.Value.Year == now.Year && 
                            o.CompletedAt.Value.Month == now.Month)
-                .SumAsync(o => o.TotalCost);
+                .Select(o => o.TotalCost)
+                .ToListAsync();
+            
+            var monthRevenue = monthOrderTotals.Sum();
 
             return new DashboardStatsDto(totalOrders, pendingOrders, activeMechanics, monthRevenue);
         }

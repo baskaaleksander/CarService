@@ -1,0 +1,59 @@
+@model Review
+@{
+    ViewData["Title"] = "Leave a Review";
+    var orderId = ViewBag.OrderId;
+}
+
+<h1>Leave a Review</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <p>Thank you for using our service! Please take a moment to rate your experience.</p>
+            </div>
+        </div>
+
+        <form asp-action="Create" method="post">
+            <input type="hidden" asp-for="ServiceOrderId" value="@orderId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="mb-3">
+                <label asp-for="Rating" class="form-label">Rating</label>
+                <div class="rating-group">
+                    @for (int i = 5; i >= 1; i--)
+                    {
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" asp-for="Rating" value="@i" id="rating@(i)" />
+                            <label class="form-check-label" for="rating@(i)">
+                                @for (int j = 1; j <= i; j++)
+                                {
+                                    <span class="text-warning">&#9733;</span>
+                                }
+                                @for (int j = i + 1; j <= 5; j++)
+                                {
+                                    <span class="text-muted">&#9733;</span>
+                                }
+                            </label>
+                        </div>
+                        <br />
+                    }
+                </div>
+                <span asp-validation-for="Rating" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Comment" class="form-label">Comment (optional)</label>
+                <textarea asp-for="Comment" class="form-control" rows="4" placeholder="Tell us about your experience..."></textarea>
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+            <a asp-controller="ServiceOrders" asp-action="Details" asp-route-id="@orderId" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

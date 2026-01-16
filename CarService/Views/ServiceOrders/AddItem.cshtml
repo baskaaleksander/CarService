@@ -1,0 +1,58 @@
+@{
+    ViewData["Title"] = "Add Item to Order";
+    var orderId = ViewBag.OrderId;
+}
+
+<h1>Add Item to Order #@orderId</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Add Service</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="AddServiceItem" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="orderId" value="@orderId" />
+                    <div class="mb-3">
+                        <label for="serviceId" class="form-label">Service</label>
+                        <select name="serviceId" id="serviceId" asp-items="@ViewBag.Services" class="form-select">
+                            <option value="">-- Select a service --</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="serviceQuantity" class="form-label">Quantity</label>
+                        <input type="number" name="quantity" id="serviceQuantity" class="form-control" style="max-width: 100px;" value="1" min="1" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Service</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Add Part</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="AddPartItem" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="orderId" value="@orderId" />
+                    <div class="mb-3">
+                        <label for="partId" class="form-label">Part</label>
+                        <select name="partId" id="partId" asp-items="@ViewBag.Parts" class="form-select">
+                            <option value="">-- Select a part --</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="partQuantity" class="form-label">Quantity</label>
+                        <input type="number" name="quantity" id="partQuantity" class="form-control" style="max-width: 100px;" value="1" min="1" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Part</button>
+                </form>
+            </div>
+        </div>
+
+        <a asp-action="Details" asp-route-id="@orderId" class="btn btn-secondary">Back to Order</a>
+    </div>
+</div>

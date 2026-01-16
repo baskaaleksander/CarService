@@ -1,0 +1,62 @@
+@model ServiceOrder
+@{
+    ViewData["Title"] = $"Assign Mechanic - Order #{Model.Id}";
+}
+
+<h1>Assign Mechanic</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Order Information</h5>
+            </div>
+            <div class="card-body">
+                <dl>
+                    <dt>Order #</dt>
+                    <dd>@Model.Id</dd>
+                    <dt>Vehicle</dt>
+                    <dd>@Model.Vehicle?.RegistrationNumber</dd>
+                    <dt>Client</dt>
+                    <dd>@Model.Client?.Email</dd>
+                    <dt>Status</dt>
+                    <dd>
+                        @switch (Model.Status)
+                        {
+                            case ServiceOrderStatus.Pending:
+                                <span class="badge bg-warning text-dark">Pending</span>
+                                break;
+                            case ServiceOrderStatus.Accepted:
+                                <span class="badge bg-primary">Accepted</span>
+                                break;
+                            case ServiceOrderStatus.InProgress:
+                                <span class="badge bg-info">In Progress</span>
+                                break;
+                            case ServiceOrderStatus.Completed:
+                                <span class="badge bg-success">Completed</span>
+                                break;
+                            case ServiceOrderStatus.Cancelled:
+                                <span class="badge bg-secondary">Cancelled</span>
+                                break;
+                        }
+                    </dd>
+                    <dt>Created</dt>
+                    <dd>@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+                </dl>
+            </div>
+        </div>
+
+        <form asp-action="Assign" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.Id" />
+            <div class="mb-3">
+                <label for="mechanicId" class="form-label">Select Mechanic</label>
+                <select name="mechanicId" id="mechanicId" asp-items="@ViewBag.Mechanics" class="form-select">
+                    <option value="">-- Select a mechanic --</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Assign Mechanic</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
