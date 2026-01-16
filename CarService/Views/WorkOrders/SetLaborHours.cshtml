@@ -4,36 +4,36 @@
 }
 
 <h1>Set Labor Hours</h1>
-<h4 class="text-muted">Order #@Model.OrderId</h4>
+<p class="text-muted">Order #@Model.OrderId</p>
+<hr />
+
+<partial name="_ValidationSummary" />
 
 <div class="row">
     <div class="col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <div class="mb-4">
-                    <label class="form-label">Current Labor Hours</label>
-                    <div class="fs-5">@Model.CurrentHours hours</div>
-                </div>
-
-                <form asp-action="SetLaborHours" method="post">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" asp-for="OrderId" />
-                    <input type="hidden" asp-for="CurrentHours" />
-
-                    <div class="mb-3">
-                        <label asp-for="Hours" class="form-label">New Labor Hours</label>
-                        <input asp-for="Hours" class="form-control" type="number" step="0.25" min="0.25" max="1000" style="max-width: 150px;" />
-                        <span asp-validation-for="Hours" class="text-danger"></span>
-                        <div class="form-text">Enter hours in increments of 0.25 (15 minutes).</div>
-                    </div>
-
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">Save Hours</button>
-                        <a asp-action="Details" asp-route-id="@Model.OrderId" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
-            </div>
+        <div class="alert alert-info mb-4">
+            <i class="bi bi-clock"></i> Current Hours: <strong>@Model.CurrentHours hrs</strong>
         </div>
+
+        <form asp-action="SetLaborHours" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="OrderId" />
+            <input type="hidden" asp-for="CurrentHours" />
+
+            <div class="mb-3">
+                <label asp-for="Hours" class="form-label">New Labor Hours</label>
+                <input asp-for="Hours" class="form-control" type="number" step="0.25" min="0.25" max="1000" style="max-width: 150px;" />
+                <span asp-validation-for="Hours" class="text-danger"></span>
+                <div class="form-text">Enter hours in increments of 0.25 (15 minutes).</div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg"></i> Update Hours
+                </button>
+                <a asp-action="Details" asp-route-id="@Model.OrderId" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
     </div>
 </div>
 

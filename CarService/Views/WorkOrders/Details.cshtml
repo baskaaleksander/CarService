@@ -3,63 +3,83 @@
     ViewData["Title"] = $"Work Order #{Model.Id}";
 }
 
-<h1>Work Order #@Model.Id</h1>
-
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
+<h1>Work Order #@Model.Id <partial name="_StatusBadge" model="Model.Status" /></h1>
+<hr />
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-6">
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0">Order Information</h5>
+                <h5 class="mb-0"><i class="bi bi-car-front"></i> Vehicle Information</h5>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <dl>
-                            <dt>Status</dt>
-                            <dd><span class="badge @Model.StatusBadgeClass">@Model.Status</span></dd>
-                            <dt>Created</dt>
-                            <dd>@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
-                            @if (Model.CompletedAt.HasValue)
-                            {
-                                <dt>Completed</dt>
-                                <dd>@Model.CompletedAt.Value.ToString("yyyy-MM-dd HH:mm")</dd>
-                            }
-                        </dl>
-                    </div>
-                    <div class="col-md-6">
-                        <dl>
-                            <dt>Vehicle</dt>
-                            <dd>@Model.VehicleInfo</dd>
-                            <dt>Client</dt>
-                            <dd>@Model.ClientName (@Model.ClientEmail)</dd>
-                            <dt>Total Cost</dt>
-                            <dd><strong>@Model.TotalCost.ToString("C")</strong></dd>
-                        </dl>
-                    </div>
-                </div>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Vehicle</dt>
+                    <dd class="col-sm-8">@Model.VehicleInfo</dd>
+                    <dt class="col-sm-4">Client</dt>
+                    <dd class="col-sm-8">@Model.ClientName</dd>
+                </dl>
             </div>
         </div>
 
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-journal-text"></i> Diagnostic Notes</h5>
+                @if (Model.CanUpdateStatus)
+                {
+                    <a asp-action="AddNotes" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-pencil"></i> Edit
+                    </a>
+                }
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(Model.DiagnosticNotes))
+                {
+                    <p style="white-space: pre-wrap;" class="mb-0">@Model.DiagnosticNotes</p>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No diagnostic notes added yet.</p>
+                }
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-clock"></i> Labor Hours</h5>
+                @if (Model.CanUpdateStatus)
+                {
+                    <a asp-action="SetLaborHours" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-pencil"></i> Update
+                    </a>
+                }
+            </div>
+            <div class="card-body">
+                <p class="fs-4 mb-0"><strong>@Model.LaborHours</strong> hours</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
         @if (Model.CanUpdateStatus)
         {
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">Actions</h5>
+            <div class="card mb-4 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-lightning"></i> Quick Actions</h5>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex flex-wrap gap-2">
-                        <a asp-action="UpdateStatus" asp-route-id="@Model.Id" class="btn btn-primary">Update Status</a>
-                        <a asp-action="AddNotes" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Add/Edit Notes</a>
-                        <a asp-action="SetLaborHours" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Set Labor Hours</a>
+                    <div class="d-grid gap-2">
+                        <a asp-action="UpdateStatus" asp-route-id="@Model.Id" class="btn btn-primary">
+                            <i class="bi bi-arrow-repeat"></i> Update Status
+                        </a>
                         @if (Model.CanAddItems)
                         {
-                            <a asp-action="AddService" asp-route-id="@Model.Id" class="btn btn-outline-success">Add Service</a>
-                            <a asp-action="AddParts" asp-route-id="@Model.Id" class="btn btn-outline-info">Add Part</a>
+                            <a asp-action="AddService" asp-route-id="@Model.Id" class="btn btn-outline-success">
+                                <i class="bi bi-plus-circle"></i> Add Service
+                            </a>
+                            <a asp-action="AddParts" asp-route-id="@Model.Id" class="btn btn-outline-info">
+                                <i class="bi bi-box"></i> Add Parts
+                            </a>
                         }
                     </div>
                 </div>
@@ -67,91 +87,47 @@
         }
 
         <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Items</h5>
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-list-check"></i> Services & Parts</h5>
             </div>
             <div class="card-body">
                 @if (Model.Items.Any())
                 {
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Name</th>
-                                <th>Quantity</th>
-                                <th>Unit Price</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Items)
-                            {
-                                <tr>
-                                    <td>
-                                        @if (item.Type == "Service")
-                                        {
-                                            <span class="badge bg-primary">Service</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-secondary">Part</span>
-                                        }
-                                    </td>
-                                    <td>@item.Name</td>
-                                    <td>@item.Quantity</td>
-                                    <td>@item.UnitPrice.ToString("C")</td>
-                                    <td>@item.TotalPrice.ToString("C")</td>
-                                </tr>
-                            }
-                        </tbody>
-                        <tfoot>
-                            <tr class="table-light">
-                                <td colspan="4" class="text-end"><strong>Total:</strong></td>
-                                <td><strong>@Model.Items.Sum(i => i.TotalPrice).ToString("C")</strong></td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var item in Model.Items)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    @if (item.Type == "Service")
+                                    {
+                                        <span class="badge bg-primary me-2">Service</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary me-2">Part</span>
+                                    }
+                                    @item.Name
+                                    @if (item.Quantity > 1)
+                                    {
+                                        <small class="text-muted">(x@item.Quantity)</small>
+                                    }
+                                </div>
+                                <span>@item.TotalPrice.ToString("C")</span>
+                            </li>
+                        }
+                        <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                            <strong>Total</strong>
+                            <strong>@Model.TotalCost.ToString("C")</strong>
+                        </li>
+                    </ul>
                 }
                 else
                 {
-                    <p class="text-muted">No items added yet.</p>
+                    <p class="text-muted mb-0">No items added yet.</p>
                 }
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Diagnostic Notes</h5>
-                @if (Model.CanUpdateStatus)
-                {
-                    <a asp-action="AddNotes" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
-                }
-            </div>
-            <div class="card-body">
-                @if (!string.IsNullOrEmpty(Model.DiagnosticNotes))
-                {
-                    <p style="white-space: pre-wrap;">@Model.DiagnosticNotes</p>
-                }
-                else
-                {
-                    <p class="text-muted">No diagnostic notes added yet.</p>
-                }
-                
-                <hr />
-                
-                <dl class="row mb-0">
-                    <dt class="col-sm-4">Labor Hours</dt>
-                    <dd class="col-sm-8">@Model.LaborHours</dd>
-                </dl>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <a asp-action="Index" class="btn btn-secondary w-100">Back to Work Orders</a>
             </div>
         </div>
     </div>
 </div>
+
+<partial name="_BackButton" model='"Back to Work Orders"' />
