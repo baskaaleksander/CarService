@@ -1,0 +1,256 @@
+using CarService.Data;
+using CarService.Models;
+using CarService.Models.Enums;
+using CarService.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+namespace CarService.Services
+{
+    public class ServiceOrderService : IServiceOrderService
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public ServiceOrderService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
+        public async Task<IEnumerable<ServiceOrder>> GetAllAsync()
+        {
+            return await _context.ServiceOrders
+                .Include(o => o.Vehicle)
+                .Include(o => o.Client)
+                .Include(o => o.Mechanic)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ServiceOrder>> GetByClientAsync(string clientId)
+        {
+            return await _context.ServiceOrders
+                .Include(o => o.Vehicle)
+                .Include(o => o.Mechanic)
+                .Where(o => o.ClientId == clientId)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ServiceOrder>> GetByMechanicAsync(string mechanicId)
+        {
+            return await _context.ServiceOrders
+                .Include(o => o.Vehicle)
+                .Include(o => o.Client)
+                .Where(o => o.MechanicId == mechanicId)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ServiceOrder>> GetByStatusAsync(ServiceOrderStatus status)
+        {
+            return await _context.ServiceOrders
+                .Include(o => o.Vehicle)
+                .Include(o => o.Client)
+                .Include(o => o.Mechanic)
+                .Where(o => o.Status == status)
+                .ToListAsync();
+        }
+
+        public async Task<ServiceOrder?> GetByIdAsync(int id)
+        {
+            return await _context.ServiceOrders
+                .Include(o => o.Vehicle)
+                .Include(o => o.Client)
+                .Include(o => o.Mechanic)
+                .FirstOrDefaultAsync(o => o.Id == id);
+        }
+
+        public async Task<ServiceOrder?> GetByIdWithDetailsAsync(int id)
+        {
+            return await _context.ServiceOrders
+                .Include(o => o.Vehicle)
+                .Include(o => o.Client)
+                .Include(o => o.Mechanic)
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.Service)
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.Part)
+                .Include(o => o.Review)
+                .FirstOrDefaultAsync(o => o.Id == id);
+        }
+
+        public async Task<ServiceOrder> CreateAsync(ServiceOrder order)
+        {
+            order.Status = ServiceOrderStatus.Pending;
+            order.CreatedAt = DateTime.UtcNow;
+            _context.ServiceOrders.Add(order);
+            await _context.SaveChangesAsync();
+            return order;
+        }
+
+        public async Task AssignMechanicAsync(int orderId, string mechanicId)
+        {
+            var order = await _context.ServiceOrders.FindAsync(orderId);
+            if (order == null) throw new InvalidOperationException("Order not found");
+
+            var mechanic = await _userManager.FindByIdAsync(mechanicId);
+            if (mechanic == null) throw new InvalidOperationException("Mechanic not found");
+
+            var roles = await _userManager.GetRolesAsync(mechanic);
+            if (!roles.Contains("Mechanic"))
+                throw new InvalidOperationException("User is not a mechanic");
+
+            order.MechanicId = mechanicId;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateStatusAsync(int orderId, ServiceOrderStatus status)
+        {
+            var order = await _context.ServiceOrders.FindAsync(orderId);
+            if (order == null) throw new InvalidOperationException("Order not found");
+
+            if (!IsValidStatusTransition(order.Status, status))
+                throw new InvalidOperationException($"Cannot transition from {order.Status} to {status}");
+
+            order.Status = status;
+
+            if (status == ServiceOrderStatus.Completed)
+            {
+                order.CompletedAt = DateTime.UtcNow;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        private static bool IsValidStatusTransition(ServiceOrderStatus current, ServiceOrderStatus next)
+        {
+            return (current, next) switch
+            {
+                (ServiceOrderStatus.Pending, ServiceOrderStatus.Accepted) => true,
+                (ServiceOrderStatus.Pending, ServiceOrderStatus.Cancelled) => true,
+                (ServiceOrderStatus.Accepted, ServiceOrderStatus.InProgress) => true,
+                (ServiceOrderStatus.Accepted, ServiceOrderStatus.Cancelled) => true,
+                (ServiceOrderStatus.InProgress, ServiceOrderStatus.Completed) => true,
+                (ServiceOrderStatus.InProgress, ServiceOrderStatus.Cancelled) => true,
+                _ => false
+            };
+        }
+
+        public async Task AddDiagnosticNotesAsync(int orderId, string notes)
+        {
+            var order = await _context.ServiceOrders.FindAsync(orderId);
+            if (order == null) throw new InvalidOperationException("Order not found");
+
+            order.DiagnosticNotes = notes;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SetLaborHoursAsync(int orderId, decimal hours)
+        {
+            var order = await _context.ServiceOrders.FindAsync(orderId);
+            if (order == null) throw new InvalidOperationException("Order not found");
+
+            order.LaborHours = hours;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddServiceItemAsync(int orderId, int serviceId, int quantity)
+        {
+            var order = await _context.ServiceOrders.FindAsync(orderId);
+            if (order == null) throw new InvalidOperationException("Order not found");
+
+            var service = await _context.Services.FindAsync(serviceId);
+            if (service == null) throw new InvalidOperationException("Service not found");
+
+            var item = new ServiceOrderItem
+            {
+                ServiceOrderId = orderId,
+                ServiceId = serviceId,
+                Quantity = quantity,
+                UnitPrice = service.Price
+            };
+
+            _context.ServiceOrderItems.Add(item);
+            await _context.SaveChangesAsync();
+            await UpdateTotalCostAsync(orderId);
+        }
+
+        public async Task AddPartItemAsync(int orderId, int partId, int quantity)
+        {
+            var order = await _context.ServiceOrders.FindAsync(orderId);
+            if (order == null) throw new InvalidOperationException("Order not found");
+
+            var part = await _context.Parts.FindAsync(partId);
+            if (part == null) throw new InvalidOperationException("Part not found");
+
+            if (part.StockQuantity < quantity)
+                throw new InvalidOperationException($"Insufficient stock for part '{part.Name}'. Available: {part.StockQuantity}, Requested: {quantity}");
+
+            part.StockQuantity -= quantity;
+
+            var item = new ServiceOrderItem
+            {
+                ServiceOrderId = orderId,
+                PartId = partId,
+                Quantity = quantity,
+                UnitPrice = part.UnitPrice
+            };
+
+            _context.ServiceOrderItems.Add(item);
+            await _context.SaveChangesAsync();
+            await UpdateTotalCostAsync(orderId);
+        }
+
+        public async Task RemoveItemAsync(int itemId)
+        {
+            var item = await _context.ServiceOrderItems
+                .Include(i => i.Part)
+                .FirstOrDefaultAsync(i => i.Id == itemId);
+            
+            if (item == null) return;
+
+            if (item.PartId.HasValue && item.Part != null)
+            {
+                item.Part.StockQuantity += item.Quantity;
+            }
+
+            var orderId = item.ServiceOrderId;
+            _context.ServiceOrderItems.Remove(item);
+            await _context.SaveChangesAsync();
+            await UpdateTotalCostAsync(orderId);
+        }
+
+        public async Task<decimal> CalculateTotalCostAsync(int orderId)
+        {
+            return await _context.ServiceOrderItems
+                .Where(i => i.ServiceOrderId == orderId)
+                .SumAsync(i => i.Quantity * i.UnitPrice);
+        }
+
+        public async Task UpdateTotalCostAsync(int orderId)
+        {
+            var order = await _context.ServiceOrders.FindAsync(orderId);
+            if (order == null) return;
+
+            order.TotalCost = await CalculateTotalCostAsync(orderId);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> CanCompleteAsync(int orderId)
+        {
+            return await _context.ServiceOrderItems
+                .AnyAsync(i => i.ServiceOrderId == orderId);
+        }
+
+        public async Task<bool> BelongsToClientAsync(int orderId, string clientId)
+        {
+            return await _context.ServiceOrders
+                .AnyAsync(o => o.Id == orderId && o.ClientId == clientId);
+        }
+
+        public async Task<bool> IsAssignedToMechanicAsync(int orderId, string mechanicId)
+        {
+            return await _context.ServiceOrders
+                .AnyAsync(o => o.Id == orderId && o.MechanicId == mechanicId);
+        }
+    }
+}

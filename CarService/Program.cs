@@ -1,5 +1,7 @@
 using CarService.Data;
 using CarService.Models;
+using CarService.Services;
+using CarService.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +29,14 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ClientOnly", policy => policy.RequireRole("Client"));
     options.AddPolicy("MechanicOrAdmin", policy => policy.RequireRole("Mechanic", "Admin"));
 });
+
+builder.Services.AddScoped<IVehicleService, VehicleService>();
+builder.Services.AddScoped<IServiceCatalogService, ServiceCatalogService>();
+builder.Services.AddScoped<IPartService, PartService>();
+builder.Services.AddScoped<IServiceOrderService, ServiceOrderService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 builder.Services.AddControllersWithViews();
 
