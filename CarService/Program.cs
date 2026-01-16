@@ -44,39 +44,7 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    await SeedRolesAndAdmin(services);
-}
-
-async Task SeedRolesAndAdmin(IServiceProvider services)
-{
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-
-    string[] roles = { "Admin", "Mechanic", "Client" };
-    foreach (var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            await roleManager.CreateAsync(new IdentityRole(role));
-        }
-    }
-
-    var adminEmail = "admin@carservice.com";
-    if (await userManager.FindByEmailAsync(adminEmail) == null)
-    {
-        var admin = new ApplicationUser
-        {
-            UserName = adminEmail,
-            Email = adminEmail,
-            FirstName = "System",
-            LastName = "Administrator",
-            EmailConfirmed = true,
-            CreatedAt = DateTime.UtcNow
-        };
-        await userManager.CreateAsync(admin, "Admin123!");
-        await userManager.AddToRoleAsync(admin, "Admin");
-    }
+    await DbSeeder.SeedAsync(scope.ServiceProvider);
 }
 
 if (app.Environment.IsDevelopment())
