@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using CarService.Validation;
 
 namespace CarService.Models
 {
@@ -7,20 +8,24 @@ namespace CarService.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "Brand is required")]
+        [StringLength(50, ErrorMessage = "Brand cannot exceed 50 characters")]
+        [Display(Name = "Brand")]
         public string Brand { get; set; } = string.Empty;
 
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "Model is required")]
+        [StringLength(50, ErrorMessage = "Model cannot exceed 50 characters")]
+        [Display(Name = "Model")]
         public string Model { get; set; } = string.Empty;
 
-        [Required]
-        [StringLength(17, MinimumLength = 17)]
+        [Required(ErrorMessage = "VIN is required")]
+        [VinValidation]
+        [Display(Name = "VIN")]
         public string VIN { get; set; } = string.Empty;
 
-        [Required]
-        [RegularExpression("^[A-Z]{1,3}[0-9A-Z]{4,5}$")]
+        [Required(ErrorMessage = "Registration number is required")]
+        [PolishRegistration]
+        [Display(Name = "Registration Number")]
         public string RegistrationNumber { get; set; } = string.Empty;
 
         [Required]

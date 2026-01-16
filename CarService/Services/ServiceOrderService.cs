@@ -114,12 +114,14 @@ namespace CarService.Services
             if (!IsValidStatusTransition(order.Status, status))
                 throw new InvalidOperationException($"Cannot transition from {order.Status} to {status}");
 
-            order.Status = status;
-
             if (status == ServiceOrderStatus.Completed)
             {
+                if (!await CanCompleteAsync(orderId))
+                    throw new InvalidOperationException("Cannot complete order without at least one service or part");
                 order.CompletedAt = DateTime.UtcNow;
             }
+
+            order.Status = status;
 
             await _context.SaveChangesAsync();
         }

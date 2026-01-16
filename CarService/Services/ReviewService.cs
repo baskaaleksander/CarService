@@ -46,6 +46,9 @@ namespace CarService.Services
             if (existingReview)
                 throw new InvalidOperationException("Order already has a review");
 
+            if (review.Rating < 1 || review.Rating > 5)
+                throw new InvalidOperationException("Rating must be between 1 and 5");
+
             review.CreatedAt = DateTime.UtcNow;
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();

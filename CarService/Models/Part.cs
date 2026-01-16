@@ -7,14 +7,20 @@ namespace CarService.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(100)]
+        [Required(ErrorMessage = "Part name is required")]
+        [StringLength(100, ErrorMessage = "Part name cannot exceed 100 characters")]
+        [Display(Name = "Part Name")]
         public string Name { get; set; } = string.Empty;
 
-        [Range(0, int.MaxValue)]
+        [Required(ErrorMessage = "Stock quantity is required")]
+        [Range(0, int.MaxValue, ErrorMessage = "Stock quantity cannot be negative")]
+        [Display(Name = "Stock Quantity")]
         public int StockQuantity { get; set; }
 
-        [Range(0.01, double.MaxValue)]
+        [Required(ErrorMessage = "Unit price is required")]
+        [Range(0.01, 100000, ErrorMessage = "Unit price must be between 0.01 and 100,000")]
+        [DataType(DataType.Currency)]
+        [Display(Name = "Unit Price")]
         public decimal UnitPrice { get; set; }
 
         public ICollection<ServiceOrderItem> ServiceOrderItems { get; set; } = new List<ServiceOrderItem>();
