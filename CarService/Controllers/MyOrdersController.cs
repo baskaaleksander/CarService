@@ -29,7 +29,19 @@ namespace CarService.Controllers
         {
             var userId = _userManager.GetUserId(User)!;
             var orders = await _orderService.GetByClientAsync(userId);
-            return View(orders);
+
+            var viewModels = orders
+                .OrderByDescending(o => o.CreatedAt)
+                .Select(o => new ClientOrderSummaryViewModel
+                {
+                    Id = o.Id,
+                    VehicleInfo = $"{o.Vehicle?.Brand} {o.Vehicle?.Model} ({o.Vehicle?.RegistrationNumber})",
+                    Status = o.Status,
+                    CreatedAt = o.CreatedAt,
+                    TotalCost = o.Items.Sum(i => i.Quantity * i.UnitPrice)
+                }).ToList();
+
+            return View(viewModels);
         }
 
         // GET: MyOrders/Details/5
@@ -59,7 +71,7 @@ namespace CarService.Controllers
             {
                 Id = order.Id,
                 VehicleInfo = $"{order.Vehicle?.Brand} {order.Vehicle?.Model} ({order.Vehicle?.RegistrationNumber})",
-                Status = order.Status.ToString(),
+                Status = order.Status,
                 CreatedAt = order.CreatedAt,
                 CompletedAt = order.CompletedAt,
                 TotalCost = items.Sum(i => i.TotalPrice),

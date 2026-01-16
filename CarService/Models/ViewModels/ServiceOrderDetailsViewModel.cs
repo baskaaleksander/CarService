@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CarService.Models.Enums;
 
 namespace CarService.Models.ViewModels
 {
@@ -7,7 +8,7 @@ namespace CarService.Models.ViewModels
     {
         public int Id { get; set; }
         public string VehicleInfo { get; set; } = string.Empty;
-        public string Status { get; set; } = string.Empty;
+        public ServiceOrderStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
         public decimal TotalCost { get; set; }

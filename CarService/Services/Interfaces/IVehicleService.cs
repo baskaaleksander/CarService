@@ -9,6 +9,7 @@ namespace CarService.Services.Interfaces
         Task<IEnumerable<Vehicle>> GetByOwnerAsync(string ownerId);
         Task<Vehicle?> GetByIdAsync(int id);
         Task<Vehicle?> GetByIdForOwnerAsync(int id, string ownerId);
+        Task<Vehicle?> GetByIdWithServiceHistoryAsync(int id, string ownerId);
         Task<Vehicle> CreateAsync(Vehicle vehicle);
         Task<Vehicle> UpdateAsync(Vehicle vehicle);
         Task DeleteAsync(int id);

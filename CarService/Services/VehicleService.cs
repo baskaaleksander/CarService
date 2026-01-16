@@ -34,6 +34,14 @@ namespace CarService.Services
                 .FirstOrDefaultAsync(v => v.Id == id && v.OwnerId == ownerId);
         }
 
+        public async Task<Vehicle?> GetByIdWithServiceHistoryAsync(int id, string ownerId)
+        {
+            return await _context.Vehicles
+                .Include(v => v.ServiceOrders)
+                    .ThenInclude(so => so.Items)
+                .FirstOrDefaultAsync(v => v.Id == id && v.OwnerId == ownerId);
+        }
+
         public async Task<Vehicle> CreateAsync(Vehicle vehicle)
         {
             _context.Vehicles.Add(vehicle);

@@ -1,4 +1,5 @@
 using CarService.Models;
+using CarService.Models.ViewModels;
 using CarService.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -29,35 +30,60 @@ namespace CarService.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var userId = _userManager.GetUserId(User)!;
-            var vehicle = await _vehicleService.GetByIdForOwnerAsync(id, userId);
+            var vehicle = await _vehicleService.GetByIdWithServiceHistoryAsync(id, userId);
             if (vehicle == null)
                 return NotFound();
-            return View(vehicle);
+
+            var viewModel = new VehicleDetailsViewModel
+            {
+                Id = vehicle.Id,
+                Brand = vehicle.Brand,
+                Model = vehicle.Model,
+                VIN = vehicle.VIN,
+                RegistrationNumber = vehicle.RegistrationNumber,
+                ServiceHistory = vehicle.ServiceOrders
+                    .OrderByDescending(so => so.CreatedAt)
+                    .Select(so => new ServiceHistoryItemViewModel
+                    {
+                        Id = so.Id,
+                        CreatedAt = so.CreatedAt,
+                        Status = so.Status,
+                        TotalCost = so.Items.Sum(i => i.Quantity * i.UnitPrice)
+                    }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult Create()
         {
-            return View();
+            return View(new VehicleCreateViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Vehicle vehicle)
+        public async Task<IActionResult> Create(VehicleCreateViewModel viewModel)
         {
             var userId = _userManager.GetUserId(User)!;
             
-            // OwnerId is set server-side, remove its validation error
-            ModelState.Remove("OwnerId");
-            
-            if (!await _vehicleService.IsVinUniqueAsync(vehicle.VIN))
+            if (!await _vehicleService.IsVinUniqueAsync(viewModel.VIN))
             {
                 ModelState.AddModelError("VIN", "This VIN is already registered.");
             }
 
-            if (!ModelState.IsValid) return View(vehicle);
+            if (!ModelState.IsValid) return View(viewModel);
 
-            vehicle.OwnerId = userId;
+            var vehicle = new Vehicle
+            {
+                Brand = viewModel.Brand,
+                Model = viewModel.Model,
+                VIN = viewModel.VIN.ToUpper(),
+                RegistrationNumber = viewModel.RegistrationNumber.ToUpper(),
+                OwnerId = userId
+            };
+
             await _vehicleService.CreateAsync(vehicle);
+            TempData["Success"] = "Vehicle added successfully!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -66,47 +92,66 @@ namespace CarService.Controllers
             var userId = _userManager.GetUserId(User)!;
             var vehicle = await _vehicleService.GetByIdForOwnerAsync(id, userId);
             if (vehicle == null) return NotFound();
-            return View(vehicle);
+
+            var viewModel = new VehicleEditViewModel
+            {
+                Id = vehicle.Id,
+                Brand = vehicle.Brand,
+                Model = vehicle.Model,
+                VIN = vehicle.VIN,
+                RegistrationNumber = vehicle.RegistrationNumber
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Vehicle vehicle)
+        public async Task<IActionResult> Edit(int id, VehicleEditViewModel viewModel)
         {
-            if (id != vehicle.Id) return BadRequest();
+            if (id != viewModel.Id) return BadRequest();
 
             var userId = _userManager.GetUserId(User)!;
             var existing = await _vehicleService.GetByIdForOwnerAsync(id, userId);
             if (existing == null) return NotFound();
 
-            // OwnerId is not submitted, remove its validation error
-            ModelState.Remove("OwnerId");
-
-            if (!await _vehicleService.IsVinUniqueAsync(vehicle.VIN, id))
+            if (!await _vehicleService.IsVinUniqueAsync(viewModel.VIN, id))
             {
                 ModelState.AddModelError("VIN", "This VIN is already registered.");
             }
 
-            if (!ModelState.IsValid) return View(vehicle);
+            if (!ModelState.IsValid) return View(viewModel);
 
-            existing.Brand = vehicle.Brand;
-            existing.Model = vehicle.Model;
-            existing.VIN = vehicle.VIN;
-            existing.RegistrationNumber = vehicle.RegistrationNumber;
+            existing.Brand = viewModel.Brand;
+            existing.Model = viewModel.Model;
+            existing.VIN = viewModel.VIN.ToUpper();
+            existing.RegistrationNumber = viewModel.RegistrationNumber.ToUpper();
 
             await _vehicleService.UpdateAsync(existing);
+            TempData["Success"] = "Vehicle updated successfully!";
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        // GET: Vehicles/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var userId = _userManager.GetUserId(User)!;
             var vehicle = await _vehicleService.GetByIdForOwnerAsync(id, userId);
             if (vehicle == null) return NotFound();
 
+            return View(vehicle);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var userId = _userManager.GetUserId(User)!;
+            var vehicle = await _vehicleService.GetByIdForOwnerAsync(id, userId);
+            if (vehicle == null) return NotFound();
+
             await _vehicleService.DeleteAsync(id);
+            TempData["Success"] = "Vehicle deleted successfully!";
             return RedirectToAction(nameof(Index));
         }
     }
