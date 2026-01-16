@@ -1,0 +1,61 @@
+@model (ApplicationUser User, IList<string> CurrentRoles)
+@{
+    ViewData["Title"] = "Change User Role";
+    var currentRole = Model.CurrentRoles.FirstOrDefault() ?? "Client";
+}
+
+<h1><i class="bi bi-person-gear"></i> Change User Role</h1>
+<p class="text-muted">@Model.User.Email</p>
+<hr />
+
+<partial name="_ValidationSummary" />
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Current Role:</strong>
+            @switch (currentRole)
+            {
+                case "Admin":
+                    <span class="badge bg-danger ms-2">Admin</span>
+                    break;
+                case "Mechanic":
+                    <span class="badge bg-primary ms-2">Mechanic</span>
+                    break;
+                case "Client":
+                    <span class="badge bg-success ms-2">Client</span>
+                    break;
+                default:
+                    <span class="badge bg-secondary ms-2">@currentRole</span>
+                    break;
+            }
+        </div>
+
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="userId" value="@Model.User.Id" />
+            
+            <div class="mb-3">
+                <label for="newRole" class="form-label">New Role</label>
+                <select name="newRole" id="newRole" class="form-select">
+                    <option value="Client" selected="@(currentRole == "Client")">Client</option>
+                    <option value="Mechanic" selected="@(currentRole == "Mechanic")">Mechanic</option>
+                    <option value="Admin" selected="@(currentRole == "Admin")">Admin</option>
+                </select>
+            </div>
+
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <strong>Warning:</strong> Changing a user's role will affect their access permissions immediately.
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg"></i> Change Role
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -187,5 +187,23 @@ namespace CarService.Controllers
             await _orderService.SetLaborHoursAsync(id, laborHours);
             return RedirectToAction(nameof(Details), new { id });
         }
+
+        public async Task<IActionResult> Invoice(int id)
+        {
+            var order = await _orderService.GetByIdWithDetailsAsync(id);
+            if (order == null) return NotFound();
+
+            var userId = _userManager.GetUserId(User)!;
+            if (!User.IsInRole("Admin") && order.ClientId != userId && order.MechanicId != userId)
+                return Forbid();
+
+            if (order.Status != ServiceOrderStatus.Completed)
+            {
+                TempData["Error"] = "Invoice can only be generated for completed orders.";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            return View(order);
+        }
     }
 }

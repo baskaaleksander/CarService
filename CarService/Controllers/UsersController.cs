@@ -28,6 +28,24 @@ namespace CarService.Controllers
             return View(usersWithRoles);
         }
 
+        public async Task<IActionResult> Edit(string id)
+        {
+            var user = await _userService.GetByIdAsync(id);
+            if (user == null) return NotFound();
+
+            var roles = await _userService.GetRolesAsync(id);
+            return View((user, roles));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string userId, string newRole)
+        {
+            await _userService.ChangeRoleAsync(userId, newRole);
+            TempData["Success"] = "User role updated successfully.";
+            return RedirectToAction(nameof(Index));
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeRole(string userId, string newRole)

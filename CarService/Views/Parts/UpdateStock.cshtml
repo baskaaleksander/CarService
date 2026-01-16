@@ -1,0 +1,40 @@
+@model Part
+@{
+    ViewData["Title"] = "Adjust Stock";
+}
+
+<h1><i class="bi bi-box-seam"></i> Adjust Stock</h1>
+<p class="text-muted">@Model.Name</p>
+<hr />
+
+<partial name="_ValidationSummary" />
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Current Stock:</strong> @Model.StockQuantity units
+        </div>
+
+        <form asp-action="UpdateStock" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.Id" />
+            
+            <div class="mb-3">
+                <label for="quantityChange" class="form-label">Quantity Change</label>
+                <input type="number" name="quantityChange" id="quantityChange" class="form-control" style="max-width: 200px;" value="0" />
+                <div class="form-text">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Use positive values to add stock, negative values to remove stock.
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-arrow-repeat"></i> Update Stock
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

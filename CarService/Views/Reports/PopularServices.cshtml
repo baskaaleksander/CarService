@@ -4,7 +4,8 @@
     ViewData["Title"] = "Popular Services";
 }
 
-<h1>Popular Services</h1>
+<h1><i class="bi bi-star"></i> Popular Services</h1>
+<hr />
 
 @if (!Model.Any())
 {
@@ -63,4 +64,4 @@ else
     </table>
 }
 
-<a asp-action="Index" class="btn btn-secondary">Back to Dashboard</a>
+<partial name="_BackButton" model='"Back to Dashboard"' />

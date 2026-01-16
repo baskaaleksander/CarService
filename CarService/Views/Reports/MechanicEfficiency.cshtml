@@ -4,7 +4,8 @@
     ViewData["Title"] = "Mechanic Efficiency";
 }
 
-<h1>Mechanic Efficiency</h1>
+<h1><i class="bi bi-person-check"></i> Mechanic Efficiency</h1>
+<hr />
 
 @if (!Model.Any())
 {
@@ -64,7 +65,7 @@ else
 
     <div class="card mt-4">
         <div class="card-header">
-            <h5 class="mb-0">Performance Legend</h5>
+            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Performance Legend</h5>
         </div>
         <div class="card-body">
             <ul class="list-unstyled mb-0">
@@ -78,5 +79,5 @@ else
 }
 
 <div class="mt-4">
-    <a asp-action="Index" class="btn btn-secondary">Back to Dashboard</a>
+    <partial name="_BackButton" model='"Back to Dashboard"' />
 </div>

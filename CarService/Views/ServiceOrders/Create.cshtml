@@ -3,12 +3,14 @@
     ViewData["Title"] = "Create Service Order";
 }
 
-<h1>Create Service Order</h1>
+<h1><i class="bi bi-clipboard-plus"></i> Create Service Order</h1>
+<hr />
+
+<partial name="_ValidationSummary" />
 
 <div class="row">
     <div class="col-md-6">
         <form asp-action="Create" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
                 <label asp-for="VehicleId" class="form-label">Vehicle</label>
                 <select asp-for="VehicleId" asp-items="@ViewBag.Vehicles" class="form-select">
@@ -21,8 +23,12 @@
                 <textarea asp-for="DiagnosticNotes" class="form-control" rows="4" placeholder="Describe the issue or service needed..."></textarea>
                 <span asp-validation-for="DiagnosticNotes" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary">Create Order</button>
-            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-plus-lg"></i> Create Order
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
         </form>
     </div>
 </div>

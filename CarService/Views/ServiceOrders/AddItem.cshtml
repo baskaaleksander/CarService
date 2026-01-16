@@ -3,13 +3,14 @@
     var orderId = ViewBag.OrderId;
 }
 
-<h1>Add Item to Order #@orderId</h1>
+<h1><i class="bi bi-plus-circle"></i> Add Item to Order #@orderId</h1>
+<hr />
 
 <div class="row">
     <div class="col-md-6">
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0">Add Service</h5>
+                <h5 class="mb-0"><i class="bi bi-gear"></i> Add Service</h5>
             </div>
             <div class="card-body">
                 <form asp-action="AddServiceItem" method="post">
@@ -25,14 +26,16 @@
                         <label for="serviceQuantity" class="form-label">Quantity</label>
                         <input type="number" name="quantity" id="serviceQuantity" class="form-control" style="max-width: 100px;" value="1" min="1" />
                     </div>
-                    <button type="submit" class="btn btn-primary">Add Service</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i> Add Service
+                    </button>
                 </form>
             </div>
         </div>
 
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0">Add Part</h5>
+                <h5 class="mb-0"><i class="bi bi-box-seam"></i> Add Part</h5>
             </div>
             <div class="card-body">
                 <form asp-action="AddPartItem" method="post">
@@ -48,11 +51,15 @@
                         <label for="partQuantity" class="form-label">Quantity</label>
                         <input type="number" name="quantity" id="partQuantity" class="form-control" style="max-width: 100px;" value="1" min="1" />
                     </div>
-                    <button type="submit" class="btn btn-primary">Add Part</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i> Add Part
+                    </button>
                 </form>
             </div>
         </div>
 
-        <a asp-action="Details" asp-route-id="@orderId" class="btn btn-secondary">Back to Order</a>
+        <a asp-action="Details" asp-route-id="@orderId" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Order
+        </a>
     </div>
 </div>

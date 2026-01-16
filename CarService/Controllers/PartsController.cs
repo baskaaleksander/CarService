@@ -54,11 +54,19 @@ namespace CarService.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> UpdateStock(int id)
+        {
+            var part = await _partService.GetByIdAsync(id);
+            if (part == null) return NotFound();
+            return View(part);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStock(int id, int quantityChange)
         {
             await _partService.UpdateStockAsync(id, quantityChange);
+            TempData["Success"] = "Stock updated successfully.";
             return RedirectToAction(nameof(Index));
         }
     }
