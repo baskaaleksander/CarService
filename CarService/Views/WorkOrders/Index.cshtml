@@ -1,0 +1,59 @@
+@model IEnumerable<ServiceOrderSummaryViewModel>
+@{
+    ViewData["Title"] = "My Work Orders";
+}
+
+<h1>My Work Orders</h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No work orders assigned to you.</div>
+}
+else
+{
+    <ul class="nav nav-tabs mb-3" id="statusTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab">
+                All (@Model.Count())
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
+                Pending (@Model.Count(o => o.Status == ServiceOrderStatus.Pending))
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="accepted-tab" data-bs-toggle="tab" data-bs-target="#accepted" type="button" role="tab">
+                Accepted (@Model.Count(o => o.Status == ServiceOrderStatus.Accepted))
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="inprogress-tab" data-bs-toggle="tab" data-bs-target="#inprogress" type="button" role="tab">
+                In Progress (@Model.Count(o => o.Status == ServiceOrderStatus.InProgress))
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed" type="button" role="tab">
+                Completed (@Model.Count(o => o.Status == ServiceOrderStatus.Completed))
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="statusTabsContent">
+        <div class="tab-pane fade show active" id="all" role="tabpanel">
+            @await Html.PartialAsync("_OrdersTable", Model)
+        </div>
+        <div class="tab-pane fade" id="pending" role="tabpanel">
+            @await Html.PartialAsync("_OrdersTable", Model.Where(o => o.Status == ServiceOrderStatus.Pending))
+        </div>
+        <div class="tab-pane fade" id="accepted" role="tabpanel">
+            @await Html.PartialAsync("_OrdersTable", Model.Where(o => o.Status == ServiceOrderStatus.Accepted))
+        </div>
+        <div class="tab-pane fade" id="inprogress" role="tabpanel">
+            @await Html.PartialAsync("_OrdersTable", Model.Where(o => o.Status == ServiceOrderStatus.InProgress))
+        </div>
+        <div class="tab-pane fade" id="completed" role="tabpanel">
+            @await Html.PartialAsync("_OrdersTable", Model.Where(o => o.Status == ServiceOrderStatus.Completed))
+        </div>
+    </div>
+}

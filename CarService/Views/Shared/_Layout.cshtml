@@ -42,6 +42,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="ServiceOrders" asp-action="Index">Service Orders</a>
                         </li>
+                        @if (User.IsInRole("Mechanic"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="WorkOrders" asp-action="Index">My Work Orders</a>
+                            </li>
+                        }
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">

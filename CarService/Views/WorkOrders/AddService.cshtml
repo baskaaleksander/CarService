@@ -1,0 +1,51 @@
+@model AddServiceItemViewModel
+@{
+    ViewData["Title"] = "Add Service";
+}
+
+<h1>Add Service</h1>
+<h4 class="text-muted">Order #@Model.OrderId</h4>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                @if (!Model.AvailableServices.Any())
+                {
+                    <div class="alert alert-warning">No services available.</div>
+                    <a asp-action="Details" asp-route-id="@Model.OrderId" class="btn btn-secondary">Back to Details</a>
+                }
+                else
+                {
+                    <form asp-action="AddService" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="OrderId" />
+
+                        <div class="mb-3">
+                            <label asp-for="ServiceId" class="form-label">Service</label>
+                            <select asp-for="ServiceId" asp-items="Model.AvailableServices" class="form-select">
+                                <option value="">-- Select Service --</option>
+                            </select>
+                            <span asp-validation-for="ServiceId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Quantity" class="form-label">Quantity</label>
+                            <input asp-for="Quantity" class="form-control" type="number" min="1" max="100" style="max-width: 150px;" />
+                            <span asp-validation-for="Quantity" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Add Service</button>
+                            <a asp-action="Details" asp-route-id="@Model.OrderId" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
