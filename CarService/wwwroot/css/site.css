@@ -20,3 +20,65 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Status badges */
+.badge {
+    font-size: 0.85em;
+}
+
+/* Card hover effects */
+.card {
+    transition: box-shadow 0.2s;
+}
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Table row hover */
+.table-hover tbody tr:hover {
+    cursor: pointer;
+    background-color: rgba(0, 123, 255, 0.05);
+}
+
+/* Form labels */
+.form-label {
+    font-weight: 500;
+}
+
+/* Navbar brand icon */
+.navbar-brand i {
+    margin-right: 0.25rem;
+}
+
+/* Dropdown menu icons */
+.dropdown-item i {
+    margin-right: 0.5rem;
+    width: 1rem;
+    text-align: center;
+}
+
+/* Toast auto-hide animation */
+.toast {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Print styles */
+@media print {
+    .navbar, .btn, footer {
+        display: none !important;
+    }
+    .container {
+        max-width: 100%;
+    }
+}

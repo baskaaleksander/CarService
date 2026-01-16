@@ -1,0 +1,15 @@
+@model CarService.Models.Enums.ServiceOrderStatus
+
+@{
+    var badgeClass = Model switch
+    {
+        ServiceOrderStatus.Pending => "bg-warning text-dark",
+        ServiceOrderStatus.Accepted => "bg-info",
+        ServiceOrderStatus.InProgress => "bg-primary",
+        ServiceOrderStatus.Completed => "bg-success",
+        ServiceOrderStatus.Cancelled => "bg-secondary",
+        _ => "bg-secondary"
+    };
+}
+
+<span class="badge @badgeClass">@Model</span>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - CarService</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/CarService.styles.css" asp-append-version="true"/>
 </head>
@@ -12,9 +13,10 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CarService</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-car-front"></i> Car Service
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -22,50 +24,68 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
+
                     @if (User.Identity?.IsAuthenticated == true)
                     {
-                        @if (User.IsInRole("Client"))
+                        @* Client Menu *@
+                        @if (User.IsInRole("Client") || User.IsInRole("Admin"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Vehicles" asp-action="Index">My Vehicles</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-car-front-fill"></i> My Vehicles
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Vehicles" asp-action="Index">View All</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Vehicles" asp-action="Create">Add New</a></li>
+                                </ul>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Appointments" asp-action="Book">Book Appointment</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="MyOrders" asp-action="Index">My Orders</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-calendar-check"></i> Service
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Appointments" asp-action="Book">Book Appointment</a></li>
+                                    <li><a class="dropdown-item" asp-controller="MyOrders" asp-action="Index">My Orders</a></li>
+                                </ul>
                             </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="ServiceOrders" asp-action="Index">Service Orders</a>
-                        </li>
+
+                        @* Mechanic Menu *@
                         @if (User.IsInRole("Mechanic"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="WorkOrders" asp-action="Index">My Work Orders</a>
+                                <a class="nav-link text-dark" asp-controller="WorkOrders" asp-action="Index">
+                                    <i class="bi bi-wrench"></i> My Work Orders
+                                </a>
                             </li>
                         }
+
+                        @* Admin Menu *@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
-                                    Admin
+                                <a class="nav-link dropdown-toggle text-primary" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-gear"></i> Admin
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-controller="Services" asp-action="Index">Services</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Parts" asp-action="Index">Parts</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Users" asp-action="Index">Users</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Reports" asp-action="Index"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" asp-controller="Reports" asp-action="Index">Reports</a></li>
+                                    <li><a class="dropdown-item" asp-controller="ServiceOrders" asp-action="Index"><i class="bi bi-list-check"></i> All Orders</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Users" asp-action="Index"><i class="bi bi-people"></i> Users</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="Services" asp-action="Index"><i class="bi bi-tools"></i> Service Catalog</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Parts" asp-action="Index"><i class="bi bi-box-seam"></i> Parts Inventory</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="Reports" asp-action="Revenue"><i class="bi bi-graph-up"></i> Reports</a></li>
                                 </ul>
                             </li>
                         }
                     }
+
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Reviews" asp-action="Index">Reviews</a>
+                        <a class="nav-link text-dark" asp-controller="Reviews" asp-action="Index">
+                            <i class="bi bi-star"></i> Reviews
+                        </a>
                     </li>
                 </ul>
                 <partial name="_LoginPartial"/>
@@ -88,5 +108,34 @@
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
+
+@if (TempData["Success"] != null)
+{
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div class="toast show" role="alert">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto"><i class="bi bi-check-circle"></i> Success</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">
+                @TempData["Success"]
+            </div>
+        </div>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div class="toast show" role="alert">
+            <div class="toast-header bg-danger text-white">
+                <strong class="me-auto"><i class="bi bi-exclamation-triangle"></i> Error</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">
+                @TempData["Error"]
+            </div>
+        </div>
+    </div>
+}
 </body>
 </html>
