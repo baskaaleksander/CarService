@@ -141,7 +141,7 @@
                         <tfoot>
                             <tr class="table-light">
                                 <td colspan="4" class="text-end"><strong>Total:</strong></td>
-                                <td><strong>@Model.TotalCost.ToString("C")</strong></td>
+                                <td><strong>@Model.Items.Sum(i => i.Quantity * i.UnitPrice).ToString("C")</strong></td>
                                 @if ((User.IsInRole("Mechanic") || User.IsInRole("Admin")) && Model.Status != ServiceOrderStatus.Completed && Model.Status != ServiceOrderStatus.Cancelled)
                                 {
                                     <td></td>

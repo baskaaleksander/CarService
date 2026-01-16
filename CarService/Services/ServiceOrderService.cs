@@ -24,6 +24,7 @@ namespace CarService.Services
                 .Include(o => o.Vehicle)
                 .Include(o => o.Client)
                 .Include(o => o.Mechanic)
+                .Include(o => o.Items)
                 .ToListAsync();
         }
 
@@ -32,6 +33,7 @@ namespace CarService.Services
             return await _context.ServiceOrders
                 .Include(o => o.Vehicle)
                 .Include(o => o.Mechanic)
+                .Include(o => o.Items)
                 .Where(o => o.ClientId == clientId)
                 .ToListAsync();
         }
@@ -41,6 +43,7 @@ namespace CarService.Services
             return await _context.ServiceOrders
                 .Include(o => o.Vehicle)
                 .Include(o => o.Client)
+                .Include(o => o.Items)
                 .Where(o => o.MechanicId == mechanicId)
                 .ToListAsync();
         }
@@ -170,8 +173,11 @@ namespace CarService.Services
             };
 
             _context.ServiceOrderItems.Add(item);
+            
+            // Update total cost on the tracked order entity
+            order.TotalCost += item.Quantity * item.UnitPrice;
+            
             await _context.SaveChangesAsync();
-            await UpdateTotalCostAsync(orderId);
         }
 
         public async Task AddPartItemAsync(int orderId, int partId, int quantity)
@@ -196,14 +202,18 @@ namespace CarService.Services
             };
 
             _context.ServiceOrderItems.Add(item);
+            
+            // Update total cost on the tracked order entity
+            order.TotalCost += item.Quantity * item.UnitPrice;
+            
             await _context.SaveChangesAsync();
-            await UpdateTotalCostAsync(orderId);
         }
 
         public async Task RemoveItemAsync(int itemId)
         {
             var item = await _context.ServiceOrderItems
                 .Include(i => i.Part)
+                .Include(i => i.ServiceOrder)
                 .FirstOrDefaultAsync(i => i.Id == itemId);
             
             if (item == null) return;
@@ -213,17 +223,25 @@ namespace CarService.Services
                 item.Part.StockQuantity += item.Quantity;
             }
 
-            var orderId = item.ServiceOrderId;
+            // Update total cost on the tracked order entity
+            if (item.ServiceOrder != null)
+            {
+                item.ServiceOrder.TotalCost -= item.Quantity * item.UnitPrice;
+                if (item.ServiceOrder.TotalCost < 0) item.ServiceOrder.TotalCost = 0;
+            }
+
             _context.ServiceOrderItems.Remove(item);
             await _context.SaveChangesAsync();
-            await UpdateTotalCostAsync(orderId);
         }
 
         public async Task<decimal> CalculateTotalCostAsync(int orderId)
         {
-            return await _context.ServiceOrderItems
+            var items = await _context.ServiceOrderItems
                 .Where(i => i.ServiceOrderId == orderId)
-                .SumAsync(i => i.Quantity * i.UnitPrice);
+                .Select(i => new { i.Quantity, i.UnitPrice })
+                .ToListAsync();
+            
+            return items.Sum(i => i.Quantity * i.UnitPrice);
         }
 
         public async Task UpdateTotalCostAsync(int orderId)

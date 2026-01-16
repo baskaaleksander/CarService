@@ -25,6 +25,16 @@ namespace CarService.Controllers
             return View(vehicles);
         }
 
+        // GET: Vehicles/Details/5
+        public async Task<IActionResult> Details(int id)
+        {
+            var userId = _userManager.GetUserId(User)!;
+            var vehicle = await _vehicleService.GetByIdForOwnerAsync(id, userId);
+            if (vehicle == null)
+                return NotFound();
+            return View(vehicle);
+        }
+
         public IActionResult Create()
         {
             return View();
@@ -35,6 +45,9 @@ namespace CarService.Controllers
         public async Task<IActionResult> Create(Vehicle vehicle)
         {
             var userId = _userManager.GetUserId(User)!;
+            
+            // OwnerId is set server-side, remove its validation error
+            ModelState.Remove("OwnerId");
             
             if (!await _vehicleService.IsVinUniqueAsync(vehicle.VIN))
             {
@@ -65,6 +78,9 @@ namespace CarService.Controllers
             var userId = _userManager.GetUserId(User)!;
             var existing = await _vehicleService.GetByIdForOwnerAsync(id, userId);
             if (existing == null) return NotFound();
+
+            // OwnerId is not submitted, remove its validation error
+            ModelState.Remove("OwnerId");
 
             if (!await _vehicleService.IsVinUniqueAsync(vehicle.VIN, id))
             {

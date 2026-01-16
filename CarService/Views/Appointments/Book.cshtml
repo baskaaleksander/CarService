@@ -1,0 +1,73 @@
+@model AppointmentBookingViewModel
+@{
+    ViewData["Title"] = "Book Appointment";
+}
+
+<h1>Book an Appointment</h1>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Book" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="VehicleId" class="form-label"></label>
+                <select asp-for="VehicleId" asp-items="Model.AvailableVehicles" class="form-select">
+                    <option value="">-- Select a Vehicle --</option>
+                </select>
+                <span asp-validation-for="VehicleId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Select Services (optional)</label>
+                <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+                    @foreach (var service in Model.AvailableServices)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="SelectedServiceIds" value="@service.Value" id="service_@service.Value">
+                            <label class="form-check-label" for="service_@service.Value">
+                                @service.Text
+                            </label>
+                        </div>
+                    }
+                </div>
+                <small class="text-muted">You can select multiple services or leave empty if you just want a diagnostic check.</small>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe the issue or what service you need..."></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Book Appointment</button>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Need Help?</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Step 1:</strong> Select the vehicle you want serviced.</p>
+                <p><strong>Step 2:</strong> Choose the services you need (optional).</p>
+                <p><strong>Step 3:</strong> Describe any issues or concerns.</p>
+                <p><strong>Step 4:</strong> Click "Book Appointment" to submit.</p>
+                <hr>
+                <p class="mb-0"><small>Our team will review your appointment and assign a mechanic as soon as possible.</small></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

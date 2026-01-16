@@ -1,0 +1,32 @@
+@model Vehicle
+@{
+    ViewData["Title"] = "Vehicle Details";
+}
+
+<h1>Vehicle Details</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">@Model.Brand @Model.Model</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Brand</dt>
+            <dd class="col-sm-9">@Model.Brand</dd>
+
+            <dt class="col-sm-3">Model</dt>
+            <dd class="col-sm-9">@Model.Model</dd>
+
+            <dt class="col-sm-3">VIN</dt>
+            <dd class="col-sm-9"><code>@Model.VIN</code></dd>
+
+            <dt class="col-sm-3">Registration Number</dt>
+            <dd class="col-sm-9"><strong>@Model.RegistrationNumber</strong></dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        <a asp-controller="Appointments" asp-action="Book" class="btn btn-primary">Book Service</a>
+    </div>
+</div>

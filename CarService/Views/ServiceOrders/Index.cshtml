@@ -66,7 +66,7 @@ else
                         }
                     </td>
                     <td>@order.CreatedAt.ToString("yyyy-MM-dd")</td>
-                    <td>@order.TotalCost.ToString("C")</td>
+                    <td>@order.Items.Sum(i => i.Quantity * i.UnitPrice).ToString("C")</td>
                     <td>
                         <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-primary">Details</a>
                         @if (User.IsInRole("Admin") && order.MechanicId == null)
