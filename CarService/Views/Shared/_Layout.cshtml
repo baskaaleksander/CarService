@@ -28,7 +28,7 @@
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         @* Client Menu *@
-                        @if (User.IsInRole("Client") || User.IsInRole("Admin"))
+                        @if (User.IsInRole("Client"))
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
