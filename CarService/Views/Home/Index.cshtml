@@ -1,8 +1,113 @@
+@model HomeIndexViewModel
 @{
     ViewData["Title"] = "Strona główna";
+    var averageRating = Model.AverageRating;
+    var averageRatingText = averageRating > 0 ? averageRating.ToString("0.0") : "Brak ocen";
+    var roundedAverage = (int)System.Math.Round(averageRating, System.MidpointRounding.AwayFromZero);
+    var hasTestimonials = Model.Testimonials.Count > 0;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Witamy</h1>
-    <p>Dowiedz się więcej o <a href="https://learn.microsoft.com/aspnet/core">tworzeniu aplikacji webowych w ASP.NET Core</a>.</p>
-</div>
+<section class="home-hero p-4 p-md-5 mb-5 rounded-3">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+            <span class="badge text-bg-primary mb-3">Zaufany serwis samochodowy</span>
+            <h1 class="display-5 fw-semibold">Serwis, któremu możesz zaufać</h1>
+            <p class="lead text-muted">
+                Kompleksowa obsługa, szybka diagnostyka i przejrzyste wyceny.
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-primary btn-lg" asp-controller="Appointments" asp-action="Book">
+                    Umów wizytę
+                </a>
+                <a class="btn btn-outline-primary btn-lg" asp-controller="Services" asp-action="Index">
+                    Zobacz usługi
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="display-6 fw-bold text-primary">@averageRatingText</div>
+                        <div>
+                            <div class="rating-stars mb-1">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= roundedAverage)
+                                    {
+                                        <span class="text-warning">&#9733;</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">&#9733;</span>
+                                    }
+                                }
+                            </div>
+                            <div class="text-muted small">Średnia ocena klientów</div>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">
+                        Opinie pochodzą od klientów, którzy zakończyli swoje zlecenia serwisowe.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+        <div>
+            <h2 class="h3 mb-1">Opinie klientów</h2>
+            <p class="text-muted mb-0">Sprawdź, jak klienci oceniają nasz serwis.</p>
+        </div>
+        <a class="btn btn-outline-primary" asp-controller="Reviews" asp-action="Index">
+            Zobacz wszystkie opinie
+        </a>
+    </div>
+
+    @if (!hasTestimonials)
+    {
+        <div class="alert alert-info">Brak opinii. Bądź pierwszą osobą, która doda opinię!</div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var testimonial in Model.Testimonials)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card testimonial-card h-100">
+                        <div class="card-body">
+                            <div class="rating-stars mb-2">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= testimonial.Rating)
+                                    {
+                                        <span class="text-warning">&#9733;</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">&#9733;</span>
+                                    }
+                                }
+                                <span class="ms-2 text-muted small">(@testimonial.Rating/5)</span>
+                            </div>
+                            @if (string.IsNullOrWhiteSpace(testimonial.Comment))
+                            {
+                                <p class="text-muted fst-italic mb-3">Brak komentarza.</p>
+                            }
+                            else
+                            {
+                                <p class="mb-3">@testimonial.Comment</p>
+                            }
+                            <div class="d-flex align-items-center justify-content-between text-muted small">
+                                <span>@testimonial.ClientName</span>
+                                <span>@testimonial.CreatedAt.ToString("dd.MM.yyyy")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

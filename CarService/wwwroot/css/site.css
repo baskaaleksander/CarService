@@ -73,6 +73,21 @@ body {
     }
 }
 
+/* Home page */
+.home-hero {
+    background: linear-gradient(135deg, #f2f6ff 0%, #ffffff 55%, #e8f7ff 100%);
+    border: 1px solid rgba(13, 110, 253, 0.1);
+}
+
+.testimonial-card {
+    border: 1px solid rgba(13, 110, 253, 0.12);
+}
+
+.rating-stars {
+    font-size: 1.05rem;
+    letter-spacing: 0.05rem;
+}
+
 /* Print styles */
 @media print {
     .navbar, .btn, footer {
