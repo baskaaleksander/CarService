@@ -11,7 +11,7 @@ namespace CarService.Validation
 
         public PolishRegistrationAttribute()
         {
-            ErrorMessage = "Invalid Polish registration number format. Expected format: 2-3 letters followed by 4-5 alphanumeric characters (e.g., WA12345, KR ABC12)";
+            ErrorMessage = "Nieprawidłowy format polskiego numeru rejestracyjnego. Oczekiwany format: 2-3 litery i 4-5 znaków alfanumerycznych (np. WA12345, KR ABC12)";
         }
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)

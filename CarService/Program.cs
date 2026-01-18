@@ -20,6 +20,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
         options.Password.RequireNonAlphanumeric = false;
     })
     .AddRoles<IdentityRole>()
+    .AddErrorDescriber<PolishIdentityErrorDescriber>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddAuthorization(options =>
@@ -62,6 +63,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -8,16 +8,16 @@ namespace CarService.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Zlecenie serwisowe jest wymagane")]
         public int ServiceOrderId { get; set; }
 
-        [Required(ErrorMessage = "Rating is required")]
+        [Required(ErrorMessage = "Ocena jest wymagana")]
         [RatingRange]
-        [Display(Name = "Rating")]
+        [Display(Name = "Ocena")]
         public int Rating { get; set; }
 
-        [StringLength(1000, ErrorMessage = "Comment cannot exceed 1000 characters")]
-        [Display(Name = "Comment")]
+        [StringLength(1000, ErrorMessage = "Komentarz nie może przekraczać 1000 znaków")]
+        [Display(Name = "Komentarz")]
         public string? Comment { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

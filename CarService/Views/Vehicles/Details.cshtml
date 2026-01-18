@@ -10,11 +10,11 @@
     <div class="col-md-8">
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-car-front me-2"></i>Vehicle Information</h5>
+                <h5 class="mb-0"><i class="bi bi-car-front me-2"></i>Informacje o pojeździe</h5>
             </div>
             <div class="card-body">
                 <dl class="row mb-0">
-                    <dt class="col-sm-3">Brand</dt>
+                    <dt class="col-sm-3">Marka</dt>
                     <dd class="col-sm-9">@Model.Brand</dd>
 
                     <dt class="col-sm-3">Model</dt>
@@ -23,26 +23,26 @@
                     <dt class="col-sm-3">VIN</dt>
                     <dd class="col-sm-9"><code>@Model.VIN</code></dd>
 
-                    <dt class="col-sm-3">Registration</dt>
+                    <dt class="col-sm-3">Numer rejestracyjny</dt>
                     <dd class="col-sm-9"><strong>@Model.RegistrationNumber</strong></dd>
                 </dl>
             </div>
             <div class="card-footer bg-transparent">
                 <div class="d-flex gap-2">
                     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
-                        <i class="bi bi-pencil"></i> Edit
+                        <i class="bi bi-pencil"></i> Edytuj
                     </a>
                     <a asp-controller="Appointments" asp-action="Book" class="btn btn-primary">
-                        <i class="bi bi-calendar-plus"></i> Book Service
+                        <i class="bi bi-calendar-plus"></i> Umów wizytę
                     </a>
-                    <partial name="_BackButton" model='"Back to Vehicles"' />
+                    <partial name="_BackButton" model='"Powrót do pojazdów"' />
                 </div>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Service History</h5>
+                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Historia serwisowa</h5>
             </div>
             @if (Model.ServiceHistory.Any())
             {
@@ -50,10 +50,10 @@
                     <table class="table table-hover mb-0">
                         <thead>
                             <tr>
-                                <th>Order #</th>
-                                <th>Date</th>
+                                <th>Zlecenie #</th>
+                                <th>Data</th>
                                 <th>Status</th>
-                                <th class="text-end">Total Cost</th>
+                                <th class="text-end">Koszt całkowity</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -69,7 +69,7 @@
                                     <td class="text-end">@order.TotalCost.ToString("C")</td>
                                     <td class="text-end">
                                         <a asp-controller="MyOrders" asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-info">
-                                            <i class="bi bi-eye"></i> View
+                                            <i class="bi bi-eye"></i> Podgląd
                                         </a>
                                     </td>
                                 </tr>
@@ -82,7 +82,7 @@
             {
                 <div class="card-body text-center text-muted py-4">
                     <i class="bi bi-inbox display-4"></i>
-                    <p class="mt-2 mb-0">No service history for this vehicle yet.</p>
+                    <p class="mt-2 mb-0">Brak historii serwisowej dla tego pojazdu.</p>
                 </div>
             }
         </div>

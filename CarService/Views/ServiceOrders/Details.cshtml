@@ -1,10 +1,10 @@
 @model ServiceOrder
 @{
-    ViewData["Title"] = $"Order #{Model.Id}";
+    ViewData["Title"] = $"Zlecenie #{Model.Id}";
 }
 
 <h1>
-    <i class="bi bi-clipboard-check"></i> Order #@Model.Id
+    <i class="bi bi-clipboard-check"></i> Zlecenie #@Model.Id
     <partial name="_StatusBadge" model="Model.Status" />
 </h1>
 <hr />
@@ -13,29 +13,29 @@
     <div class="col-md-8">
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Order Information</h5>
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informacje o zleceniu</h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
                         <dl>
-                            <dt><i class="bi bi-calendar3 me-1"></i> Created</dt>
+                            <dt><i class="bi bi-calendar3 me-1"></i> Utworzono</dt>
                             <dd>@Model.CreatedAt.ToString("d")</dd>
                             @if (Model.CompletedAt.HasValue)
                             {
-                                <dt><i class="bi bi-check-circle me-1"></i> Completed</dt>
+                                <dt><i class="bi bi-check-circle me-1"></i> Zakończono</dt>
                                 <dd>@Model.CompletedAt.Value.ToString("d")</dd>
                             }
                         </dl>
                     </div>
                     <div class="col-md-6">
                         <dl>
-                            <dt><i class="bi bi-car-front me-1"></i> Vehicle</dt>
+                            <dt><i class="bi bi-car-front me-1"></i> Pojazd</dt>
                             <dd>@Model.Vehicle?.Brand @Model.Vehicle?.Model (@Model.Vehicle?.RegistrationNumber)</dd>
-                            <dt><i class="bi bi-person me-1"></i> Client</dt>
+                            <dt><i class="bi bi-person me-1"></i> Klient</dt>
                             <dd>@Model.Client?.FirstName @Model.Client?.LastName (@Model.Client?.Email)</dd>
-                            <dt><i class="bi bi-wrench me-1"></i> Mechanic</dt>
-                            <dd>@(Model.Mechanic != null ? $"{Model.Mechanic.FirstName} {Model.Mechanic.LastName}" : "Unassigned")</dd>
+                            <dt><i class="bi bi-wrench me-1"></i> Mechanik</dt>
+                            <dd>@(Model.Mechanic != null ? $"{Model.Mechanic.FirstName} {Model.Mechanic.LastName}" : "Nieprzypisany")</dd>
                         </dl>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
         {
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Status Update</h5>
+                    <h5 class="mb-0">Aktualizacja statusu</h5>
                 </div>
                 <div class="card-body">
                     <form asp-action="UpdateStatus" method="post" class="d-inline">
@@ -55,17 +55,17 @@
                         <div class="btn-group" role="group">
                             @if (Model.Status == ServiceOrderStatus.Pending)
                             {
-                                <button type="submit" name="status" value="@ServiceOrderStatus.Accepted" class="btn btn-primary">Accept</button>
-                                <button type="submit" name="status" value="@ServiceOrderStatus.Cancelled" class="btn btn-secondary">Cancel</button>
+                                <button type="submit" name="status" value="@ServiceOrderStatus.Accepted" class="btn btn-primary">Przyjmij</button>
+                                <button type="submit" name="status" value="@ServiceOrderStatus.Cancelled" class="btn btn-secondary">Anuluj</button>
                             }
                             @if (Model.Status == ServiceOrderStatus.Accepted)
                             {
-                                <button type="submit" name="status" value="@ServiceOrderStatus.InProgress" class="btn btn-info">Start Work</button>
-                                <button type="submit" name="status" value="@ServiceOrderStatus.Cancelled" class="btn btn-secondary">Cancel</button>
+                                <button type="submit" name="status" value="@ServiceOrderStatus.InProgress" class="btn btn-info">Rozpocznij pracę</button>
+                                <button type="submit" name="status" value="@ServiceOrderStatus.Cancelled" class="btn btn-secondary">Anuluj</button>
                             }
                             @if (Model.Status == ServiceOrderStatus.InProgress)
                             {
-                                <button type="submit" name="status" value="@ServiceOrderStatus.Completed" class="btn btn-success">Complete</button>
+                                <button type="submit" name="status" value="@ServiceOrderStatus.Completed" class="btn btn-success">Zakończ</button>
                             }
                         </div>
                     </form>
@@ -75,10 +75,10 @@
 
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Items</h5>
+                <h5 class="mb-0">Pozycje</h5>
                 @if ((User.IsInRole("Mechanic") || User.IsInRole("Admin")) && Model.Status != ServiceOrderStatus.Completed && Model.Status != ServiceOrderStatus.Cancelled)
                 {
-                    <a asp-action="AddItem" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">Add Item</a>
+                    <a asp-action="AddItem" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">Dodaj pozycję</a>
                 }
             </div>
             <div class="card-body">
@@ -87,11 +87,11 @@
                     <table class="table table-sm">
                         <thead>
                             <tr>
-                                <th>Type</th>
-                                <th>Name</th>
-                                <th>Quantity</th>
-                                <th>Unit Price</th>
-                                <th>Total</th>
+                                <th>Typ</th>
+                                <th>Nazwa</th>
+                                <th>Ilość</th>
+                                <th>Cena jednostkowa</th>
+                                <th>Razem</th>
                                 @if ((User.IsInRole("Mechanic") || User.IsInRole("Admin")) && Model.Status != ServiceOrderStatus.Completed && Model.Status != ServiceOrderStatus.Cancelled)
                                 {
                                     <th></th>
@@ -102,7 +102,7 @@
                             @foreach (var item in Model.Items)
                             {
                                 <tr>
-                                    <td>@(item.ServiceId.HasValue ? "Service" : "Part")</td>
+                                    <td>@(item.ServiceId.HasValue ? "Usługa" : "Część")</td>
                                     <td>@(item.Service?.Name ?? item.Part?.Name)</td>
                                     <td>@item.Quantity</td>
                                     <td>@item.UnitPrice.ToString("C")</td>
@@ -110,11 +110,11 @@
                                     @if ((User.IsInRole("Mechanic") || User.IsInRole("Admin")) && Model.Status != ServiceOrderStatus.Completed && Model.Status != ServiceOrderStatus.Cancelled)
                                     {
                                         <td>
-                                            <form asp-action="RemoveItem" method="post" class="d-inline" onsubmit="return confirm('Remove this item?')">
+                                            <form asp-action="RemoveItem" method="post" class="d-inline" onsubmit="return confirm('Usunąć tę pozycję?')">
                                                 @Html.AntiForgeryToken()
                                                 <input type="hidden" name="id" value="@Model.Id" />
                                                 <input type="hidden" name="itemId" value="@item.Id" />
-                                                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Usuń</button>
                                             </form>
                                         </td>
                                     }
@@ -123,7 +123,7 @@
                         </tbody>
                         <tfoot>
                             <tr class="table-light">
-                                <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                                <td colspan="4" class="text-end"><strong>Suma:</strong></td>
                                 <td><strong>@Model.Items.Sum(i => i.Quantity * i.UnitPrice).ToString("C")</strong></td>
                                 @if ((User.IsInRole("Mechanic") || User.IsInRole("Admin")) && Model.Status != ServiceOrderStatus.Completed && Model.Status != ServiceOrderStatus.Cancelled)
                                 {
@@ -135,7 +135,7 @@
                 }
                 else
                 {
-                    <p class="text-muted">No items added yet.</p>
+                    <p class="text-muted">Brak dodanych pozycji.</p>
                 }
             </div>
         </div>
@@ -144,21 +144,21 @@
         {
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Diagnostic Notes</h5>
+                    <h5 class="mb-0">Notatki diagnostyczne</h5>
                 </div>
                 <div class="card-body">
                     <form asp-action="UpdateDiagnostics" method="post">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="id" value="@Model.Id" />
                         <div class="mb-3">
-                            <label for="diagnosticNotes" class="form-label">Notes</label>
+                            <label for="diagnosticNotes" class="form-label">Notatki</label>
                             <textarea name="diagnosticNotes" id="diagnosticNotes" class="form-control" rows="4">@Model.DiagnosticNotes</textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="laborHours" class="form-label">Labor Hours</label>
+                            <label for="laborHours" class="form-label">Godziny pracy</label>
                             <input type="number" name="laborHours" id="laborHours" class="form-control" style="max-width: 150px;" step="0.5" min="0" value="@Model.LaborHours" />
                         </div>
-                        <button type="submit" class="btn btn-primary">Save Notes</button>
+                        <button type="submit" class="btn btn-primary">Zapisz notatki</button>
                     </form>
                 </div>
             </div>
@@ -167,13 +167,13 @@
         {
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Diagnostic Notes</h5>
+                    <h5 class="mb-0">Notatki diagnostyczne</h5>
                 </div>
                 <div class="card-body">
                     <p>@Model.DiagnosticNotes</p>
                     @if (Model.LaborHours > 0)
                     {
-                        <p><strong>Labor Hours:</strong> @Model.LaborHours</p>
+                        <p><strong>Godziny pracy:</strong> @Model.LaborHours</p>
                     }
                 </div>
             </div>
@@ -183,7 +183,7 @@
         {
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Review</h5>
+                    <h5 class="mb-0">Opinia</h5>
                 </div>
                 <div class="card-body">
                     @if (Model.Review != null)
@@ -200,21 +200,21 @@
                                     <span class="text-muted">&#9733;</span>
                                 }
                             }
-                            <span class="ms-2">(@Model.Review.Rating/5)</span>
+                            <span class="ms-2">(@Model.Review.Rating z 5)</span>
                         </div>
                         @if (!string.IsNullOrEmpty(Model.Review.Comment))
                         {
                             <p>@Model.Review.Comment</p>
                         }
-                        <small class="text-muted">Reviewed on @Model.Review.CreatedAt.ToString("yyyy-MM-dd")</small>
+                        <small class="text-muted">Oceniono @Model.Review.CreatedAt.ToString("yyyy-MM-dd")</small>
                     }
                     else if (User.IsInRole("Client"))
                     {
-                        <a asp-controller="Reviews" asp-action="Create" asp-route-orderId="@Model.Id" class="btn btn-outline-primary">Leave a Review</a>
+                        <a asp-controller="Reviews" asp-action="Create" asp-route-orderId="@Model.Id" class="btn btn-outline-primary">Dodaj opinię</a>
                     }
                     else
                     {
-                        <p class="text-muted">No review yet.</p>
+                        <p class="text-muted">Brak opinii.</p>
                     }
                 </div>
             </div>
@@ -227,10 +227,10 @@
                 @if (Model.Status == ServiceOrderStatus.Completed)
                 {
                     <a asp-action="Invoice" asp-route-id="@Model.Id" class="btn btn-outline-primary w-100 mb-2">
-                        <i class="bi bi-printer"></i> Print Invoice
+                        <i class="bi bi-printer"></i> Drukuj fakturę
                     </a>
                 }
-                <partial name="_BackButton" model='"Back to Orders"' />
+                <partial name="_BackButton" model='"Powrót do zleceń"' />
             </div>
         </div>
     </div>

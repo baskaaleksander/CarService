@@ -36,18 +36,18 @@ namespace CarService.Services
         {
             var order = await _context.ServiceOrders.FindAsync(review.ServiceOrderId);
             if (order == null)
-                throw new InvalidOperationException("Order not found");
+                throw new InvalidOperationException("Nie znaleziono zlecenia");
 
             if (order.Status != ServiceOrderStatus.Completed)
-                throw new InvalidOperationException("Can only review completed orders");
+                throw new InvalidOperationException("Można oceniać tylko zakończone zlecenia");
 
             var existingReview = await _context.Reviews
                 .AnyAsync(r => r.ServiceOrderId == review.ServiceOrderId);
             if (existingReview)
-                throw new InvalidOperationException("Order already has a review");
+                throw new InvalidOperationException("Zlecenie ma już opinię");
 
             if (review.Rating < 1 || review.Rating > 5)
-                throw new InvalidOperationException("Rating must be between 1 and 5");
+                throw new InvalidOperationException("Ocena musi być w zakresie od 1 do 5");
 
             review.CreatedAt = DateTime.UtcNow;
             _context.Reviews.Add(review);

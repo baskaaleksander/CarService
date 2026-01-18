@@ -1,17 +1,17 @@
 @using CarService.Services.Interfaces
 @model IEnumerable<MonthlyRevenueDto>
 @{
-    ViewData["Title"] = "Revenue Report";
+    ViewData["Title"] = "Raport przychodów";
     var year = (int)ViewBag.Year;
 }
 
-<h1><i class="bi bi-graph-up"></i> Revenue Report</h1>
+<h1><i class="bi bi-graph-up"></i> Raport przychodów</h1>
 <hr />
 
 <div class="mb-4">
     <form method="get" class="row g-3 align-items-end">
         <div class="col-auto">
-            <label for="year" class="form-label">Select Year</label>
+            <label for="year" class="form-label">Wybierz rok</label>
             <select name="year" id="year" class="form-select" onchange="this.form.submit()">
                 @for (int y = DateTime.UtcNow.Year; y >= DateTime.UtcNow.Year - 5; y--)
                 {
@@ -24,7 +24,7 @@
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">No revenue data available for @year.</div>
+    <div class="alert alert-info">Brak danych o przychodach dla @year.</div>
 }
 else
 {
@@ -32,7 +32,7 @@ else
         <div class="col-md-4">
             <div class="card text-bg-success">
                 <div class="card-body text-center">
-                    <h6>Total Revenue (@year)</h6>
+                    <h6>Łączny przychód (@year)</h6>
                     <h3>@Model.Sum(m => m.Revenue).ToString("C")</h3>
                 </div>
             </div>
@@ -40,7 +40,7 @@ else
         <div class="col-md-4">
             <div class="card text-bg-primary">
                 <div class="card-body text-center">
-                    <h6>Total Orders (@year)</h6>
+                    <h6>Łączna liczba zleceń (@year)</h6>
                     <h3>@Model.Sum(m => m.OrderCount)</h3>
                 </div>
             </div>
@@ -48,7 +48,7 @@ else
         <div class="col-md-4">
             <div class="card text-bg-info">
                 <div class="card-body text-center">
-                    <h6>Average per Order</h6>
+                    <h6>Średnia na zlecenie</h6>
                     <h3>
                         @if (Model.Sum(m => m.OrderCount) > 0)
                         {
@@ -56,7 +56,7 @@ else
                         }
                         else
                         {
-                            @("$0.00")
+                            @(0m.ToString("C"))
                         }
                     </h3>
                 </div>
@@ -67,10 +67,10 @@ else
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th>Month</th>
-                <th class="text-end">Revenue</th>
-                <th class="text-end">Order Count</th>
-                <th class="text-end">Avg per Order</th>
+                <th>Miesiąc</th>
+                <th class="text-end">Przychód</th>
+                <th class="text-end">Liczba zleceń</th>
+                <th class="text-end">Średnia na zlecenie</th>
             </tr>
         </thead>
         <tbody>
@@ -87,7 +87,7 @@ else
                         }
                         else
                         {
-                            @("$0.00")
+                            @(0m.ToString("C"))
                         }
                     </td>
                 </tr>
@@ -95,7 +95,7 @@ else
         </tbody>
         <tfoot class="table-light">
             <tr class="fw-bold">
-                <td>Total</td>
+                <td>Razem</td>
                 <td class="text-end">@Model.Sum(m => m.Revenue).ToString("C")</td>
                 <td class="text-end">@Model.Sum(m => m.OrderCount)</td>
                 <td class="text-end">
@@ -105,7 +105,7 @@ else
                     }
                     else
                     {
-                        @("$0.00")
+                        @(0m.ToString("C"))
                     }
                 </td>
             </tr>
@@ -113,4 +113,4 @@ else
     </table>
 }
 
-<partial name="_BackButton" model='"Back to Dashboard"' />
+<partial name="_BackButton" model='"Powrót do pulpitu"' />

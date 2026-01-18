@@ -37,7 +37,7 @@ namespace CarService.Controllers
             var userId = _userManager.GetUserId(User)!;
             
             if (!await _reviewService.CanReviewOrderAsync(orderId, userId))
-                return BadRequest("Cannot review this order.");
+                return BadRequest("Nie można ocenić tego zlecenia.");
 
             ViewBag.OrderId = orderId;
             return View();
@@ -51,7 +51,7 @@ namespace CarService.Controllers
             var userId = _userManager.GetUserId(User)!;
             
             if (!await _reviewService.CanReviewOrderAsync(review.ServiceOrderId, userId))
-                return BadRequest("Cannot review this order.");
+                return BadRequest("Nie można ocenić tego zlecenia.");
 
             if (!ModelState.IsValid)
             {

@@ -1,22 +1,22 @@
 @model WorkOrderDetailsViewModel
 @{
-    ViewData["Title"] = $"Work Order #{Model.Id}";
+    ViewData["Title"] = $"Zlecenie #{Model.Id}";
 }
 
-<h1>Work Order #@Model.Id <partial name="_StatusBadge" model="Model.Status" /></h1>
+<h1>Zlecenie #@Model.Id <partial name="_StatusBadge" model="Model.Status" /></h1>
 <hr />
 
 <div class="row">
     <div class="col-md-6">
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-car-front"></i> Vehicle Information</h5>
+                <h5 class="mb-0"><i class="bi bi-car-front"></i> Informacje o pojeździe</h5>
             </div>
             <div class="card-body">
                 <dl class="row mb-0">
-                    <dt class="col-sm-4">Vehicle</dt>
+                    <dt class="col-sm-4">Pojazd</dt>
                     <dd class="col-sm-8">@Model.VehicleInfo</dd>
-                    <dt class="col-sm-4">Client</dt>
+                    <dt class="col-sm-4">Klient</dt>
                     <dd class="col-sm-8">@Model.ClientName</dd>
                 </dl>
             </div>
@@ -24,11 +24,11 @@
 
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="bi bi-journal-text"></i> Diagnostic Notes</h5>
+                <h5 class="mb-0"><i class="bi bi-journal-text"></i> Notatki diagnostyczne</h5>
                 @if (Model.CanUpdateStatus)
                 {
                     <a asp-action="AddNotes" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary">
-                        <i class="bi bi-pencil"></i> Edit
+                        <i class="bi bi-pencil"></i> Edytuj
                     </a>
                 }
             </div>
@@ -39,23 +39,23 @@
                 }
                 else
                 {
-                    <p class="text-muted mb-0">No diagnostic notes added yet.</p>
+                    <p class="text-muted mb-0">Brak notatek diagnostycznych.</p>
                 }
             </div>
         </div>
 
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="bi bi-clock"></i> Labor Hours</h5>
+                <h5 class="mb-0"><i class="bi bi-clock"></i> Godziny pracy</h5>
                 @if (Model.CanUpdateStatus)
                 {
                     <a asp-action="SetLaborHours" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary">
-                        <i class="bi bi-pencil"></i> Update
+                        <i class="bi bi-pencil"></i> Aktualizuj
                     </a>
                 }
             </div>
             <div class="card-body">
-                <p class="fs-4 mb-0"><strong>@Model.LaborHours</strong> hours</p>
+                <p class="fs-4 mb-0"><strong>@Model.LaborHours</strong> godz.</p>
             </div>
         </div>
     </div>
@@ -65,20 +65,20 @@
         {
             <div class="card mb-4 border-primary">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-lightning"></i> Quick Actions</h5>
+                    <h5 class="mb-0"><i class="bi bi-lightning"></i> Szybkie akcje</h5>
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
                         <a asp-action="UpdateStatus" asp-route-id="@Model.Id" class="btn btn-primary">
-                            <i class="bi bi-arrow-repeat"></i> Update Status
+                            <i class="bi bi-arrow-repeat"></i> Aktualizuj status
                         </a>
                         @if (Model.CanAddItems)
                         {
                             <a asp-action="AddService" asp-route-id="@Model.Id" class="btn btn-outline-success">
-                                <i class="bi bi-plus-circle"></i> Add Service
+                                <i class="bi bi-plus-circle"></i> Dodaj usługę
                             </a>
                             <a asp-action="AddParts" asp-route-id="@Model.Id" class="btn btn-outline-info">
-                                <i class="bi bi-box"></i> Add Parts
+                                <i class="bi bi-box"></i> Dodaj części
                             </a>
                         }
                     </div>
@@ -88,7 +88,7 @@
 
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-list-check"></i> Services & Parts</h5>
+                <h5 class="mb-0"><i class="bi bi-list-check"></i> Usługi i części</h5>
             </div>
             <div class="card-body">
                 @if (Model.Items.Any())
@@ -98,13 +98,13 @@
                         {
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    @if (item.Type == "Service")
+                                    @if (item.Type == "Usługa")
                                     {
-                                        <span class="badge bg-primary me-2">Service</span>
+                                        <span class="badge bg-primary me-2">Usługa</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-secondary me-2">Part</span>
+                                        <span class="badge bg-secondary me-2">Część</span>
                                     }
                                     @item.Name
                                     @if (item.Quantity > 1)
@@ -116,18 +116,18 @@
                             </li>
                         }
                         <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
-                            <strong>Total</strong>
+                            <strong>Suma</strong>
                             <strong>@Model.TotalCost.ToString("C")</strong>
                         </li>
                     </ul>
                 }
                 else
                 {
-                    <p class="text-muted mb-0">No items added yet.</p>
+                    <p class="text-muted mb-0">Brak dodanych pozycji.</p>
                 }
             </div>
         </div>
     </div>
 </div>
 
-<partial name="_BackButton" model='"Back to Work Orders"' />
+<partial name="_BackButton" model='"Powrót do zleceń"' />

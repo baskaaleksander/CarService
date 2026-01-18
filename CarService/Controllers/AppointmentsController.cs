@@ -37,7 +37,7 @@ namespace CarService.Controllers
 
             if (!vehicles.Any())
             {
-                TempData["Error"] = "Please add a vehicle first before booking an appointment.";
+                TempData["Error"] = "Najpierw dodaj pojazd, aby umówić wizytę.";
                 return RedirectToAction("Create", "Vehicles");
             }
 
@@ -109,7 +109,7 @@ namespace CarService.Controllers
                 }
             }
 
-            TempData["Success"] = "Appointment booked successfully!";
+            TempData["Success"] = "Wizyta została zarezerwowana pomyślnie.";
             return RedirectToAction("Details", "MyOrders", new { id = createdOrder.Id });
         }
     }

@@ -53,7 +53,7 @@ namespace CarService.Services
             var newQuantity = part.StockQuantity + quantityChange;
             if (newQuantity < 0)
             {
-                throw new InvalidOperationException($"Insufficient stock for part '{part.Name}'. Available: {part.StockQuantity}, Requested change: {quantityChange}");
+                throw new InvalidOperationException($"Niewystarczająca ilość na stanie dla części '{part.Name}'. Dostępne: {part.StockQuantity}, żądana zmiana: {quantityChange}");
             }
 
             part.StockQuantity = newQuantity;

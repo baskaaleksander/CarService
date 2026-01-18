@@ -1,24 +1,24 @@
 @model Vehicle
 @{
-    ViewData["Title"] = "Delete Vehicle";
+    ViewData["Title"] = "Usuń pojazd";
 }
 
-<h1>Delete Vehicle</h1>
+<h1>Usuń pojazd</h1>
 <hr />
 
 <div class="alert alert-danger">
-    <h5 class="alert-heading"><i class="bi bi-exclamation-triangle me-2"></i>Are you sure you want to delete this vehicle?</h5>
-    <p class="mb-0">This action cannot be undone.</p>
+    <h5 class="alert-heading"><i class="bi bi-exclamation-triangle me-2"></i>Czy na pewno chcesz usunąć ten pojazd?</h5>
+    <p class="mb-0">Tej operacji nie można cofnąć.</p>
 </div>
 
 <div class="card mb-4">
     <div class="card-body">
         <dl class="row mb-0">
-            <dt class="col-sm-3">Brand</dt>
+            <dt class="col-sm-3">Marka</dt>
             <dd class="col-sm-9">@Model.Brand</dd>
             <dt class="col-sm-3">Model</dt>
             <dd class="col-sm-9">@Model.Model</dd>
-            <dt class="col-sm-3">Registration</dt>
+            <dt class="col-sm-3">Numer rejestracyjny</dt>
             <dd class="col-sm-9"><strong>@Model.RegistrationNumber</strong></dd>
             <dt class="col-sm-3">VIN</dt>
             <dd class="col-sm-9"><code>@Model.VIN</code></dd>
@@ -29,8 +29,8 @@
 <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
     <div class="d-flex gap-2">
         <button type="submit" class="btn btn-danger">
-            <i class="bi bi-trash"></i> Delete Vehicle
+            <i class="bi bi-trash"></i> Usuń pojazd
         </button>
-        <partial name="_BackButton" model='"Back to Vehicles"' />
+        <partial name="_BackButton" model='"Powrót do pojazdów"' />
     </div>
 </form>

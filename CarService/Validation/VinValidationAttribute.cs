@@ -11,7 +11,7 @@ namespace CarService.Validation
 
         public VinValidationAttribute()
         {
-            ErrorMessage = "VIN must be exactly 17 characters and cannot contain letters I, O, or Q";
+            ErrorMessage = "VIN musi mieć dokładnie 17 znaków i nie może zawierać liter I, O ani Q";
         }
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
@@ -25,10 +25,10 @@ namespace CarService.Validation
                 return new ValidationResult(ErrorMessage);
 
             if (vin.Length != 17)
-                return new ValidationResult("VIN must be exactly 17 characters");
+                return new ValidationResult("VIN musi mieć dokładnie 17 znaków");
 
             if (!VinRegex.IsMatch(vin))
-                return new ValidationResult("VIN cannot contain letters I, O, or Q and must only contain alphanumeric characters");
+                return new ValidationResult("VIN nie może zawierać liter I, O ani Q i może składać się tylko ze znaków alfanumerycznych");
 
             return ValidationResult.Success;
         }

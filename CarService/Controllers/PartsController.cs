@@ -66,7 +66,7 @@ namespace CarService.Controllers
         public async Task<IActionResult> UpdateStock(int id, int quantityChange)
         {
             await _partService.UpdateStockAsync(id, quantityChange);
-            TempData["Success"] = "Stock updated successfully.";
+            TempData["Success"] = "Stan magazynowy został zaktualizowany pomyślnie.";
             return RedirectToAction(nameof(Index));
         }
     }

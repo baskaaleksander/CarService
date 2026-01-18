@@ -7,13 +7,13 @@ namespace CarService.Models.ViewModels
         public int ServiceOrderId { get; set; }
         public string VehicleInfo { get; set; } = string.Empty;
 
-        [Required]
-        [Range(1, 5)]
-        [Display(Name = "Rating")]
+        [Required(ErrorMessage = "Ocena jest wymagana")]
+        [Range(1, 5, ErrorMessage = "Ocena musi być w zakresie od 1 do 5")]
+        [Display(Name = "Ocena")]
         public int Rating { get; set; }
 
-        [StringLength(1000)]
-        [Display(Name = "Comment")]
+        [StringLength(1000, ErrorMessage = "Komentarz nie może przekraczać 1000 znaków")]
+        [Display(Name = "Komentarz")]
         public string? Comment { get; set; }
     }
 }

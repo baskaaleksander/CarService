@@ -109,30 +109,30 @@ namespace CarService.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [StringLength(50)]
-            [Display(Name = "First name")]
+            [Required(ErrorMessage = "Imię jest wymagane")]
+            [StringLength(50, ErrorMessage = "Imię nie może przekraczać 50 znaków")]
+            [Display(Name = "Imię")]
             public string FirstName { get; set; } = string.Empty;
 
-            [Required]
-            [StringLength(50)]
-            [Display(Name = "Last name")]
+            [Required(ErrorMessage = "Nazwisko jest wymagane")]
+            [StringLength(50, ErrorMessage = "Nazwisko nie może przekraczać 50 znaków")]
+            [Display(Name = "Nazwisko")]
             public string LastName { get; set; } = string.Empty;
 
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
+            [Required(ErrorMessage = "Adres e-mail jest wymagany")]
+            [EmailAddress(ErrorMessage = "Nieprawidłowy adres e-mail")]
+            [Display(Name = "E-mail")]
             public string Email { get; set; } = string.Empty;
 
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Hasło jest wymagane")]
+            [StringLength(100, ErrorMessage = "Pole {0} musi mieć co najmniej {2} i maksymalnie {1} znaków.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Hasło")]
             public string Password { get; set; } = string.Empty;
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Potwierdź hasło")]
+            [Compare("Password", ErrorMessage = "Hasło i potwierdzenie hasła nie są zgodne.")]
             public string ConfirmPassword { get; set; } = string.Empty;
         }
     }

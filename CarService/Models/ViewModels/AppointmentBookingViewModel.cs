@@ -6,15 +6,15 @@ namespace CarService.Models.ViewModels
 {
     public class AppointmentBookingViewModel
     {
-        [Required]
-        [Display(Name = "Vehicle")]
+        [Required(ErrorMessage = "Pojazd jest wymagany")]
+        [Display(Name = "Pojazd")]
         public int VehicleId { get; set; }
 
-        [StringLength(2000)]
-        [Display(Name = "Description / Notes")]
+        [StringLength(2000, ErrorMessage = "Opis / uwagi nie mogą przekraczać 2000 znaków")]
+        [Display(Name = "Opis / uwagi")]
         public string? Description { get; set; }
 
-        [Display(Name = "Services")]
+        [Display(Name = "Usługi")]
         public List<int>? SelectedServiceIds { get; set; }
 
         // For populating dropdowns

@@ -8,27 +8,27 @@ namespace CarService.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Brand is required")]
-        [StringLength(50, ErrorMessage = "Brand cannot exceed 50 characters")]
-        [Display(Name = "Brand")]
+        [Required(ErrorMessage = "Marka jest wymagana")]
+        [StringLength(50, ErrorMessage = "Marka nie może przekraczać 50 znaków")]
+        [Display(Name = "Marka")]
         public string Brand { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Model is required")]
-        [StringLength(50, ErrorMessage = "Model cannot exceed 50 characters")]
+        [Required(ErrorMessage = "Model jest wymagany")]
+        [StringLength(50, ErrorMessage = "Model nie może przekraczać 50 znaków")]
         [Display(Name = "Model")]
         public string Model { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "VIN is required")]
+        [Required(ErrorMessage = "VIN jest wymagany")]
         [VinValidation]
         [Display(Name = "VIN")]
         public string VIN { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Registration number is required")]
+        [Required(ErrorMessage = "Numer rejestracyjny jest wymagany")]
         [PolishRegistration]
-        [Display(Name = "Registration Number")]
+        [Display(Name = "Numer rejestracyjny")]
         public string RegistrationNumber { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = "Właściciel jest wymagany")]
         public string OwnerId { get; set; } = string.Empty;
 
         public ApplicationUser? Owner { get; set; }

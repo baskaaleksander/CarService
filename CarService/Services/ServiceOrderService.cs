@@ -93,14 +93,14 @@ namespace CarService.Services
         public async Task AssignMechanicAsync(int orderId, string mechanicId)
         {
             var order = await _context.ServiceOrders.FindAsync(orderId);
-            if (order == null) throw new InvalidOperationException("Order not found");
+            if (order == null) throw new InvalidOperationException("Nie znaleziono zlecenia");
 
             var mechanic = await _userManager.FindByIdAsync(mechanicId);
-            if (mechanic == null) throw new InvalidOperationException("Mechanic not found");
+            if (mechanic == null) throw new InvalidOperationException("Nie znaleziono mechanika");
 
             var roles = await _userManager.GetRolesAsync(mechanic);
             if (!roles.Contains("Mechanic"))
-                throw new InvalidOperationException("User is not a mechanic");
+                throw new InvalidOperationException("Użytkownik nie jest mechanikiem");
 
             order.MechanicId = mechanicId;
             await _context.SaveChangesAsync();
@@ -109,15 +109,15 @@ namespace CarService.Services
         public async Task UpdateStatusAsync(int orderId, ServiceOrderStatus status)
         {
             var order = await _context.ServiceOrders.FindAsync(orderId);
-            if (order == null) throw new InvalidOperationException("Order not found");
+            if (order == null) throw new InvalidOperationException("Nie znaleziono zlecenia");
 
             if (!IsValidStatusTransition(order.Status, status))
-                throw new InvalidOperationException($"Cannot transition from {order.Status} to {status}");
+                throw new InvalidOperationException($"Nie można zmienić statusu z {order.Status} na {status}");
 
             if (status == ServiceOrderStatus.Completed)
             {
                 if (!await CanCompleteAsync(orderId))
-                    throw new InvalidOperationException("Cannot complete order without at least one service or part");
+                    throw new InvalidOperationException("Nie można zakończyć zlecenia bez co najmniej jednej usługi lub części");
                 order.CompletedAt = DateTime.UtcNow;
             }
 
@@ -143,7 +143,7 @@ namespace CarService.Services
         public async Task AddDiagnosticNotesAsync(int orderId, string notes)
         {
             var order = await _context.ServiceOrders.FindAsync(orderId);
-            if (order == null) throw new InvalidOperationException("Order not found");
+            if (order == null) throw new InvalidOperationException("Nie znaleziono zlecenia");
 
             order.DiagnosticNotes = notes;
             await _context.SaveChangesAsync();
@@ -152,7 +152,7 @@ namespace CarService.Services
         public async Task SetLaborHoursAsync(int orderId, decimal hours)
         {
             var order = await _context.ServiceOrders.FindAsync(orderId);
-            if (order == null) throw new InvalidOperationException("Order not found");
+            if (order == null) throw new InvalidOperationException("Nie znaleziono zlecenia");
 
             order.LaborHours = hours;
             await _context.SaveChangesAsync();
@@ -161,10 +161,10 @@ namespace CarService.Services
         public async Task AddServiceItemAsync(int orderId, int serviceId, int quantity)
         {
             var order = await _context.ServiceOrders.FindAsync(orderId);
-            if (order == null) throw new InvalidOperationException("Order not found");
+            if (order == null) throw new InvalidOperationException("Nie znaleziono zlecenia");
 
             var service = await _context.Services.FindAsync(serviceId);
-            if (service == null) throw new InvalidOperationException("Service not found");
+            if (service == null) throw new InvalidOperationException("Nie znaleziono usługi");
 
             var item = new ServiceOrderItem
             {
@@ -185,13 +185,13 @@ namespace CarService.Services
         public async Task AddPartItemAsync(int orderId, int partId, int quantity)
         {
             var order = await _context.ServiceOrders.FindAsync(orderId);
-            if (order == null) throw new InvalidOperationException("Order not found");
+            if (order == null) throw new InvalidOperationException("Nie znaleziono zlecenia");
 
             var part = await _context.Parts.FindAsync(partId);
-            if (part == null) throw new InvalidOperationException("Part not found");
+            if (part == null) throw new InvalidOperationException("Nie znaleziono części");
 
             if (part.StockQuantity < quantity)
-                throw new InvalidOperationException($"Insufficient stock for part '{part.Name}'. Available: {part.StockQuantity}, Requested: {quantity}");
+                throw new InvalidOperationException($"Niewystarczająca ilość na stanie dla części '{part.Name}'. Dostępne: {part.StockQuantity}, wymagane: {quantity}");
 
             part.StockQuantity -= quantity;
 

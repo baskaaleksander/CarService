@@ -1,10 +1,10 @@
 @model ServiceOrder
 @{
-    ViewData["Title"] = $"Assign Mechanic - Order #{Model.Id}";
+    ViewData["Title"] = $"Przypisz mechanika - Zlecenie #{Model.Id}";
 }
 
-<h1><i class="bi bi-person-plus"></i> Assign Mechanic to Order</h1>
-<p class="text-muted">Order #@Model.Id - @Model.Vehicle?.Brand @Model.Vehicle?.Model (@Model.Vehicle?.RegistrationNumber)</p>
+<h1><i class="bi bi-person-plus"></i> Przypisz mechanika do zlecenia</h1>
+<p class="text-muted">Zlecenie #@Model.Id - @Model.Vehicle?.Brand @Model.Vehicle?.Model (@Model.Vehicle?.RegistrationNumber)</p>
 <hr />
 
 <partial name="_ValidationSummary" />
@@ -15,7 +15,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <i class="bi bi-info-circle me-2"></i>
-                    <strong>Client:</strong> @Model.Client?.Email
+                    <strong>Klient:</strong> @Model.Client?.Email
                 </div>
                 <div>
                     <strong>Status:</strong> <partial name="_StatusBadge" model="Model.Status" />
@@ -27,16 +27,16 @@
             @Html.AntiForgeryToken()
             <input type="hidden" name="id" value="@Model.Id" />
             <div class="mb-3">
-                <label for="mechanicId" class="form-label">Select Mechanic</label>
+                <label for="mechanicId" class="form-label">Wybierz mechanika</label>
                 <select name="mechanicId" id="mechanicId" asp-items="@ViewBag.Mechanics" class="form-select">
-                    <option value="">-- Select a mechanic --</option>
+                    <option value="">-- Wybierz mechanika --</option>
                 </select>
             </div>
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-person-check"></i> Assign Mechanic
+                    <i class="bi bi-person-check"></i> Przypisz mechanika
                 </button>
-                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                <a asp-action="Index" class="btn btn-outline-secondary">Anuluj</a>
             </div>
         </form>
     </div>

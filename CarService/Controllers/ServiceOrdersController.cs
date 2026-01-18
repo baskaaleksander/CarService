@@ -86,7 +86,7 @@ namespace CarService.Controllers
             var vehicle = await _vehicleService.GetByIdForOwnerAsync(order.VehicleId, userId);
             if (vehicle == null)
             {
-                ModelState.AddModelError("VehicleId", "Invalid vehicle selected.");
+                ModelState.AddModelError("VehicleId", "Wybrano nieprawidłowy pojazd.");
             }
 
             if (!ModelState.IsValid)
@@ -199,7 +199,7 @@ namespace CarService.Controllers
 
             if (order.Status != ServiceOrderStatus.Completed)
             {
-                TempData["Error"] = "Invoice can only be generated for completed orders.";
+                TempData["Error"] = "Fakturę można wygenerować tylko dla zakończonych zleceń.";
                 return RedirectToAction(nameof(Details), new { id });
             }
 

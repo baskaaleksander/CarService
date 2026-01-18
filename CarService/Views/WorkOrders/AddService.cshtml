@@ -1,10 +1,10 @@
 @model AddServiceItemViewModel
 @{
-    ViewData["Title"] = "Add Service to Order";
+    ViewData["Title"] = "Dodaj usługę do zlecenia";
 }
 
-<h1>Add Service to Order</h1>
-<p class="text-muted">Order #@Model.OrderId</p>
+<h1>Dodaj usługę do zlecenia</h1>
+<p class="text-muted">Zlecenie #@Model.OrderId</p>
 <hr />
 
 <partial name="_ValidationSummary" />
@@ -13,9 +13,9 @@
     <div class="col-md-6">
         @if (!Model.AvailableServices.Any())
         {
-            <div class="alert alert-warning">No services available.</div>
+            <div class="alert alert-warning">Brak dostępnych usług.</div>
             <a asp-action="Details" asp-route-id="@Model.OrderId" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left"></i> Back to Details
+                <i class="bi bi-arrow-left"></i> Powrót do szczegółów
             </a>
         }
         else
@@ -25,24 +25,24 @@
                 <input type="hidden" asp-for="OrderId" />
 
                 <div class="mb-3">
-                    <label asp-for="ServiceId" class="form-label">Service</label>
+                    <label asp-for="ServiceId" class="form-label">Usługa</label>
                     <select asp-for="ServiceId" asp-items="Model.AvailableServices" class="form-select">
-                        <option value="">-- Select Service --</option>
+                        <option value="">-- Wybierz usługę --</option>
                     </select>
                     <span asp-validation-for="ServiceId" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Quantity" class="form-label">Quantity</label>
+                    <label asp-for="Quantity" class="form-label">Ilość</label>
                     <input asp-for="Quantity" class="form-control" type="number" min="1" max="100" style="max-width: 150px;" />
                     <span asp-validation-for="Quantity" class="text-danger"></span>
                 </div>
 
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i> Add Service
+                        <i class="bi bi-plus-lg"></i> Dodaj usługę
                     </button>
-                    <a asp-action="Details" asp-route-id="@Model.OrderId" class="btn btn-outline-secondary">Cancel</a>
+                    <a asp-action="Details" asp-route-id="@Model.OrderId" class="btn btn-outline-secondary">Anuluj</a>
                 </div>
             </form>
         }

@@ -7,8 +7,9 @@ namespace CarService.Models.ViewModels.Mechanic
         public int OrderId { get; set; }
         public string? ExistingNotes { get; set; }
 
-        [Required]
-        [StringLength(2000)]
+        [Required(ErrorMessage = "Notatki są wymagane")]
+        [StringLength(2000, ErrorMessage = "Notatki nie mogą przekraczać 2000 znaków")]
+        [Display(Name = "Notatki")]
         public string Notes { get; set; } = string.Empty;
     }
 }

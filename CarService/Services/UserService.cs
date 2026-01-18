@@ -51,10 +51,10 @@ namespace CarService.Services
         public async Task ChangeRoleAsync(string userId, string newRole)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) throw new InvalidOperationException("User not found");
+            if (user == null) throw new InvalidOperationException("Nie znaleziono użytkownika");
 
             if (!await _roleManager.RoleExistsAsync(newRole))
-                throw new InvalidOperationException($"Role '{newRole}' does not exist");
+                throw new InvalidOperationException($"Rola '{newRole}' nie istnieje");
 
             var currentRoles = await _userManager.GetRolesAsync(user);
             await _userManager.RemoveFromRolesAsync(user, currentRoles);

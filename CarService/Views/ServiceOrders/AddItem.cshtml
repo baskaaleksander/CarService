@@ -1,33 +1,33 @@
 @{
-    ViewData["Title"] = "Add Item to Order";
+    ViewData["Title"] = "Dodaj pozycję do zlecenia";
     var orderId = ViewBag.OrderId;
 }
 
-<h1><i class="bi bi-plus-circle"></i> Add Item to Order #@orderId</h1>
+<h1><i class="bi bi-plus-circle"></i> Dodaj pozycję do zlecenia #@orderId</h1>
 <hr />
 
 <div class="row">
     <div class="col-md-6">
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-gear"></i> Add Service</h5>
+                <h5 class="mb-0"><i class="bi bi-gear"></i> Dodaj usługę</h5>
             </div>
             <div class="card-body">
                 <form asp-action="AddServiceItem" method="post">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="orderId" value="@orderId" />
                     <div class="mb-3">
-                        <label for="serviceId" class="form-label">Service</label>
+                        <label for="serviceId" class="form-label">Usługa</label>
                         <select name="serviceId" id="serviceId" asp-items="@ViewBag.Services" class="form-select">
-                            <option value="">-- Select a service --</option>
+                            <option value="">-- Wybierz usługę --</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="serviceQuantity" class="form-label">Quantity</label>
+                        <label for="serviceQuantity" class="form-label">Ilość</label>
                         <input type="number" name="quantity" id="serviceQuantity" class="form-control" style="max-width: 100px;" value="1" min="1" />
                     </div>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i> Add Service
+                        <i class="bi bi-plus-lg"></i> Dodaj usługę
                     </button>
                 </form>
             </div>
@@ -35,31 +35,31 @@
 
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-box-seam"></i> Add Part</h5>
+                <h5 class="mb-0"><i class="bi bi-box-seam"></i> Dodaj część</h5>
             </div>
             <div class="card-body">
                 <form asp-action="AddPartItem" method="post">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="orderId" value="@orderId" />
                     <div class="mb-3">
-                        <label for="partId" class="form-label">Part</label>
+                        <label for="partId" class="form-label">Część</label>
                         <select name="partId" id="partId" asp-items="@ViewBag.Parts" class="form-select">
-                            <option value="">-- Select a part --</option>
+                            <option value="">-- Wybierz część --</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="partQuantity" class="form-label">Quantity</label>
+                        <label for="partQuantity" class="form-label">Ilość</label>
                         <input type="number" name="quantity" id="partQuantity" class="form-control" style="max-width: 100px;" value="1" min="1" />
                     </div>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i> Add Part
+                        <i class="bi bi-plus-lg"></i> Dodaj część
                     </button>
                 </form>
             </div>
         </div>
 
         <a asp-action="Details" asp-route-id="@orderId" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Back to Order
+            <i class="bi bi-arrow-left"></i> Powrót do zlecenia
         </a>
     </div>
 </div>

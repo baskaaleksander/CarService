@@ -9,7 +9,8 @@ namespace CarService.Models.ViewModels.Mechanic
         public int OrderId { get; set; }
         public ServiceOrderStatus CurrentStatus { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Nowy status jest wymagany")]
+        [Display(Name = "Nowy status")]
         public ServiceOrderStatus NewStatus { get; set; }
 
         public IEnumerable<SelectListItem> AvailableStatuses { get; set; } = new List<SelectListItem>();

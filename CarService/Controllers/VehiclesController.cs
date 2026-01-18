@@ -68,7 +68,7 @@ namespace CarService.Controllers
             
             if (!await _vehicleService.IsVinUniqueAsync(viewModel.VIN))
             {
-                ModelState.AddModelError("VIN", "This VIN is already registered.");
+                ModelState.AddModelError("VIN", "Ten numer VIN jest już zarejestrowany.");
             }
 
             if (!ModelState.IsValid) return View(viewModel);
@@ -83,7 +83,7 @@ namespace CarService.Controllers
             };
 
             await _vehicleService.CreateAsync(vehicle);
-            TempData["Success"] = "Vehicle added successfully!";
+            TempData["Success"] = "Pojazd został dodany pomyślnie.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -117,7 +117,7 @@ namespace CarService.Controllers
 
             if (!await _vehicleService.IsVinUniqueAsync(viewModel.VIN, id))
             {
-                ModelState.AddModelError("VIN", "This VIN is already registered.");
+                ModelState.AddModelError("VIN", "Ten numer VIN jest już zarejestrowany.");
             }
 
             if (!ModelState.IsValid) return View(viewModel);
@@ -128,7 +128,7 @@ namespace CarService.Controllers
             existing.RegistrationNumber = viewModel.RegistrationNumber.ToUpper();
 
             await _vehicleService.UpdateAsync(existing);
-            TempData["Success"] = "Vehicle updated successfully!";
+            TempData["Success"] = "Pojazd został zaktualizowany pomyślnie.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -151,7 +151,7 @@ namespace CarService.Controllers
             if (vehicle == null) return NotFound();
 
             await _vehicleService.DeleteAsync(id);
-            TempData["Success"] = "Vehicle deleted successfully!";
+            TempData["Success"] = "Pojazd został usunięty pomyślnie.";
             return RedirectToAction(nameof(Index));
         }
     }

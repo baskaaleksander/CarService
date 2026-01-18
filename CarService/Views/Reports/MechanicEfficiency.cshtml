@@ -1,25 +1,25 @@
 @using CarService.Services.Interfaces
 @model IEnumerable<MechanicEfficiencyDto>
 @{
-    ViewData["Title"] = "Mechanic Efficiency";
+    ViewData["Title"] = "Efektywność mechaników";
 }
 
-<h1><i class="bi bi-person-check"></i> Mechanic Efficiency</h1>
+<h1><i class="bi bi-person-check"></i> Efektywność mechaników</h1>
 <hr />
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">No mechanic performance data available yet.</div>
+    <div class="alert alert-info">Brak danych o wydajności mechaników.</div>
 }
 else
 {
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th>Mechanic Name</th>
-                <th class="text-end">Completed Orders</th>
-                <th class="text-end">Avg Completion (Hours)</th>
-                <th>Performance</th>
+                <th>Mechanik</th>
+                <th class="text-end">Zakończone zlecenia</th>
+                <th class="text-end">Średni czas realizacji (godz.)</th>
+                <th>Wynik</th>
             </tr>
         </thead>
         <tbody>
@@ -31,23 +31,23 @@ else
                 <tr>
                     <td>@mechanic.MechanicName</td>
                     <td class="text-end">@mechanic.CompletedOrders</td>
-                    <td class="text-end">@mechanic.AvgCompletionHours.ToString("0.0") hrs</td>
+                    <td class="text-end">@mechanic.AvgCompletionHours.ToString("0.0") godz.</td>
                     <td>
                         @if (mechanic.AvgCompletionHours <= avgOverall * 0.8m)
                         {
-                            <span class="badge bg-success">Excellent</span>
+                            <span class="badge bg-success">Świetna</span>
                         }
                         else if (mechanic.AvgCompletionHours <= avgOverall)
                         {
-                            <span class="badge bg-primary">Good</span>
+                            <span class="badge bg-primary">Dobra</span>
                         }
                         else if (mechanic.AvgCompletionHours <= avgOverall * 1.2m)
                         {
-                            <span class="badge bg-warning text-dark">Average</span>
+                            <span class="badge bg-warning text-dark">Średnia</span>
                         }
                         else
                         {
-                            <span class="badge bg-danger">Below Average</span>
+                            <span class="badge bg-danger">Poniżej średniej</span>
                         }
                     </td>
                 </tr>
@@ -55,9 +55,9 @@ else
         </tbody>
         <tfoot class="table-light">
             <tr class="fw-bold">
-                <td>Overall Average</td>
+                <td>Średnia ogólna</td>
                 <td class="text-end">@Model.Sum(m => m.CompletedOrders)</td>
-                <td class="text-end">@avgOverall.ToString("0.0") hrs</td>
+                <td class="text-end">@avgOverall.ToString("0.0") godz.</td>
                 <td></td>
             </tr>
         </tfoot>
@@ -65,19 +65,19 @@ else
 
     <div class="card mt-4">
         <div class="card-header">
-            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Performance Legend</h5>
+            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Legenda wyników</h5>
         </div>
         <div class="card-body">
             <ul class="list-unstyled mb-0">
-                <li><span class="badge bg-success me-2">Excellent</span> 20% or more below average completion time</li>
-                <li><span class="badge bg-primary me-2">Good</span> At or below average completion time</li>
-                <li><span class="badge bg-warning text-dark me-2">Average</span> Up to 20% above average completion time</li>
-                <li><span class="badge bg-danger me-2">Below Average</span> More than 20% above average completion time</li>
+                <li><span class="badge bg-success me-2">Świetna</span> Co najmniej 20% poniżej średniego czasu realizacji</li>
+                <li><span class="badge bg-primary me-2">Dobra</span> Na poziomie lub poniżej średniego czasu realizacji</li>
+                <li><span class="badge bg-warning text-dark me-2">Średnia</span> Do 20% powyżej średniego czasu realizacji</li>
+                <li><span class="badge bg-danger me-2">Poniżej średniej</span> Ponad 20% powyżej średniego czasu realizacji</li>
             </ul>
         </div>
     </div>
 }
 
 <div class="mt-4">
-    <partial name="_BackButton" model='"Back to Dashboard"' />
+    <partial name="_BackButton" model='"Powrót do pulpitu"' />
 </div>

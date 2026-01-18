@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -22,7 +22,7 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Strona główna</a>
                     </li>
 
                     @if (User.Identity?.IsAuthenticated == true)
@@ -32,20 +32,20 @@
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-car-front-fill"></i> My Vehicles
+                                    <i class="bi bi-car-front-fill"></i> Moje pojazdy
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-controller="Vehicles" asp-action="Index">View All</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Vehicles" asp-action="Create">Add New</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Vehicles" asp-action="Index">Zobacz wszystkie</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Vehicles" asp-action="Create">Dodaj nowy</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-calendar-check"></i> Service
+                                    <i class="bi bi-calendar-check"></i> Serwis
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-controller="Appointments" asp-action="Book">Book Appointment</a></li>
-                                    <li><a class="dropdown-item" asp-controller="MyOrders" asp-action="Index">My Orders</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Appointments" asp-action="Book">Umów wizytę</a></li>
+                                    <li><a class="dropdown-item" asp-controller="MyOrders" asp-action="Index">Moje zlecenia</a></li>
                                 </ul>
                             </li>
                         }
@@ -55,7 +55,7 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="WorkOrders" asp-action="Index">
-                                    <i class="bi bi-wrench"></i> My Work Orders
+                                    <i class="bi bi-wrench"></i> Moje zlecenia
                                 </a>
                             </li>
                         }
@@ -65,18 +65,18 @@
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-primary" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-gear"></i> Admin
+                                    <i class="bi bi-gear"></i> Administrator
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-controller="Reports" asp-action="Index"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Reports" asp-action="Index"><i class="bi bi-speedometer2"></i> Pulpit</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" asp-controller="ServiceOrders" asp-action="Index"><i class="bi bi-list-check"></i> All Orders</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Users" asp-action="Index"><i class="bi bi-people"></i> Users</a></li>
+                                    <li><a class="dropdown-item" asp-controller="ServiceOrders" asp-action="Index"><i class="bi bi-list-check"></i> Wszystkie zlecenia</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Users" asp-action="Index"><i class="bi bi-people"></i> Użytkownicy</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" asp-controller="Services" asp-action="Index"><i class="bi bi-tools"></i> Service Catalog</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Parts" asp-action="Index"><i class="bi bi-box-seam"></i> Parts Inventory</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Services" asp-action="Index"><i class="bi bi-tools"></i> Katalog usług</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Parts" asp-action="Index"><i class="bi bi-box-seam"></i> Magazyn części</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" asp-controller="Reports" asp-action="Revenue"><i class="bi bi-graph-up"></i> Reports</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Reports" asp-action="Revenue"><i class="bi bi-graph-up"></i> Raporty</a></li>
                                 </ul>
                             </li>
                         }
@@ -84,7 +84,7 @@
 
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-controller="Reviews" asp-action="Index">
-                            <i class="bi bi-star"></i> Reviews
+                            <i class="bi bi-star"></i> Opinie
                         </a>
                     </li>
                 </ul>
@@ -101,7 +101,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2026 - CarService - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2026 - CarService - <a asp-area="" asp-controller="Home" asp-action="Privacy">Prywatność</a>
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -114,7 +114,7 @@
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
         <div class="toast show" role="alert">
             <div class="toast-header bg-success text-white">
-                <strong class="me-auto"><i class="bi bi-check-circle"></i> Success</strong>
+                <strong class="me-auto"><i class="bi bi-check-circle"></i> Sukces</strong>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
             </div>
             <div class="toast-body">
@@ -128,7 +128,7 @@
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
         <div class="toast show" role="alert">
             <div class="toast-header bg-danger text-white">
-                <strong class="me-auto"><i class="bi bi-exclamation-triangle"></i> Error</strong>
+                <strong class="me-auto"><i class="bi bi-exclamation-triangle"></i> Błąd</strong>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
             </div>
             <div class="toast-body">

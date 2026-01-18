@@ -7,12 +7,14 @@ namespace CarService.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "Imię jest wymagane")]
+        [StringLength(50, ErrorMessage = "Imię nie może przekraczać 50 znaków")]
+        [Display(Name = "Imię")]
         public string FirstName { get; set; } = string.Empty;
 
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "Nazwisko jest wymagane")]
+        [StringLength(50, ErrorMessage = "Nazwisko nie może przekraczać 50 znaków")]
+        [Display(Name = "Nazwisko")]
         public string LastName { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

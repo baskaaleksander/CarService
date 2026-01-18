@@ -1,16 +1,16 @@
 @model Review
 @{
-    ViewData["Title"] = "Leave a Review";
+    ViewData["Title"] = "Dodaj opinię";
     var orderId = ViewBag.OrderId;
 }
 
-<h1>Leave a Review</h1>
+<h1>Dodaj opinię</h1>
 
 <div class="row">
     <div class="col-md-6">
         <div class="card mb-4">
             <div class="card-body">
-                <p>Thank you for using our service! Please take a moment to rate your experience.</p>
+                <p>Dziękujemy za skorzystanie z naszych usług! Oceń proszę swoją wizytę.</p>
             </div>
         </div>
 
@@ -19,7 +19,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
             <div class="mb-3">
-                <label asp-for="Rating" class="form-label">Rating</label>
+                <label asp-for="Rating" class="form-label">Ocena</label>
                 <div class="rating-group">
                     @for (int i = 5; i >= 1; i--)
                     {
@@ -43,13 +43,13 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="Comment" class="form-label">Comment (optional)</label>
-                <textarea asp-for="Comment" class="form-control" rows="4" placeholder="Tell us about your experience..."></textarea>
+                <label asp-for="Comment" class="form-label">Komentarz (opcjonalnie)</label>
+                <textarea asp-for="Comment" class="form-control" rows="4" placeholder="Napisz o swoich wrażeniach..."></textarea>
                 <span asp-validation-for="Comment" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit Review</button>
-            <a asp-controller="ServiceOrders" asp-action="Details" asp-route-id="@orderId" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Wyślij opinię</button>
+            <a asp-controller="ServiceOrders" asp-action="Details" asp-route-id="@orderId" class="btn btn-secondary">Anuluj</a>
         </form>
     </div>
 </div>

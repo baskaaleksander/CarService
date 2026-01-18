@@ -99,7 +99,7 @@ namespace CarService.Controllers
             var allowedTransitions = GetAllowedStatusTransitions(order.Status);
             if (!allowedTransitions.Any(s => s.Value == ((int)model.NewStatus).ToString()))
             {
-                ModelState.AddModelError("NewStatus", "Invalid status transition.");
+                ModelState.AddModelError("NewStatus", "Nieprawidłowa zmiana statusu.");
             }
 
             // Validate completion requirements
@@ -108,7 +108,7 @@ namespace CarService.Controllers
                 var canComplete = await _orderService.CanCompleteAsync(model.OrderId);
                 if (!canComplete)
                 {
-                    ModelState.AddModelError("NewStatus", "Cannot complete order without at least one item.");
+                    ModelState.AddModelError("NewStatus", "Nie można zakończyć zlecenia bez co najmniej jednej pozycji.");
                 }
             }
 
@@ -177,7 +177,7 @@ namespace CarService.Controllers
 
             if (order.Status == ServiceOrderStatus.Completed || order.Status == ServiceOrderStatus.Cancelled)
             {
-                TempData["Error"] = "Cannot add parts to a completed or cancelled order.";
+                TempData["Error"] = "Nie można dodać części do zlecenia zakończonego lub anulowanego.";
                 return RedirectToAction(nameof(Details), new { id });
             }
 
@@ -188,7 +188,7 @@ namespace CarService.Controllers
                 AvailableParts = parts.Select(p => new SelectListItem
                 {
                     Value = p.Id.ToString(),
-                    Text = $"{p.Name} - {p.UnitPrice:C} (Stock: {p.StockQuantity})"
+                    Text = $"{p.Name} - {p.UnitPrice:C} (Stan: {p.StockQuantity})"
                 })
             };
 
@@ -209,7 +209,7 @@ namespace CarService.Controllers
 
             if (order.Status == ServiceOrderStatus.Completed || order.Status == ServiceOrderStatus.Cancelled)
             {
-                TempData["Error"] = "Cannot add parts to a completed or cancelled order.";
+                TempData["Error"] = "Nie można dodać części do zlecenia zakończonego lub anulowanego.";
                 return RedirectToAction(nameof(Details), new { id = model.OrderId });
             }
 
@@ -217,7 +217,7 @@ namespace CarService.Controllers
             var hasSufficientStock = await _partService.HasSufficientStockAsync(model.PartId, model.Quantity);
             if (!hasSufficientStock)
             {
-                ModelState.AddModelError("Quantity", "Insufficient stock for the selected part.");
+                ModelState.AddModelError("Quantity", "Niewystarczająca ilość na stanie dla wybranej części.");
             }
 
             if (!ModelState.IsValid)
@@ -226,7 +226,7 @@ namespace CarService.Controllers
                 model.AvailableParts = parts.Select(p => new SelectListItem
                 {
                     Value = p.Id.ToString(),
-                    Text = $"{p.Name} - {p.UnitPrice:C} (Stock: {p.StockQuantity})"
+                    Text = $"{p.Name} - {p.UnitPrice:C} (Stan: {p.StockQuantity})"
                 });
                 return View(model);
             }
@@ -248,7 +248,7 @@ namespace CarService.Controllers
 
             if (order.Status == ServiceOrderStatus.Completed || order.Status == ServiceOrderStatus.Cancelled)
             {
-                TempData["Error"] = "Cannot add services to a completed or cancelled order.";
+                TempData["Error"] = "Nie można dodać usług do zlecenia zakończonego lub anulowanego.";
                 return RedirectToAction(nameof(Details), new { id });
             }
 
@@ -280,7 +280,7 @@ namespace CarService.Controllers
 
             if (order.Status == ServiceOrderStatus.Completed || order.Status == ServiceOrderStatus.Cancelled)
             {
-                TempData["Error"] = "Cannot add services to a completed or cancelled order.";
+                TempData["Error"] = "Nie można dodać usług do zlecenia zakończonego lub anulowanego.";
                 return RedirectToAction(nameof(Details), new { id = model.OrderId });
             }
 
@@ -362,15 +362,15 @@ namespace CarService.Controllers
             switch (currentStatus)
             {
                 case ServiceOrderStatus.Pending:
-                    transitions.Add(new SelectListItem { Value = ((int)ServiceOrderStatus.Accepted).ToString(), Text = "Accept" });
-                    transitions.Add(new SelectListItem { Value = ((int)ServiceOrderStatus.Cancelled).ToString(), Text = "Cancel" });
+                    transitions.Add(new SelectListItem { Value = ((int)ServiceOrderStatus.Accepted).ToString(), Text = "Przyjmij" });
+                    transitions.Add(new SelectListItem { Value = ((int)ServiceOrderStatus.Cancelled).ToString(), Text = "Anuluj" });
                     break;
                 case ServiceOrderStatus.Accepted:
-                    transitions.Add(new SelectListItem { Value = ((int)ServiceOrderStatus.InProgress).ToString(), Text = "Start Work" });
-                    transitions.Add(new SelectListItem { Value = ((int)ServiceOrderStatus.Cancelled).ToString(), Text = "Cancel" });
+                    transitions.Add(new SelectListItem { Value = ((int)ServiceOrderStatus.InProgress).ToString(), Text = "Rozpocznij pracę" });
+                    transitions.Add(new SelectListItem { Value = ((int)ServiceOrderStatus.Cancelled).ToString(), Text = "Anuluj" });
                     break;
                 case ServiceOrderStatus.InProgress:
-                    transitions.Add(new SelectListItem { Value = ((int)ServiceOrderStatus.Completed).ToString(), Text = "Complete" });
+                    transitions.Add(new SelectListItem { Value = ((int)ServiceOrderStatus.Completed).ToString(), Text = "Zakończ" });
                     break;
             }
 
@@ -394,8 +394,8 @@ namespace CarService.Controllers
                 LaborHours = order.LaborHours,
                 Items = order.Items.Select(i => new ServiceOrderItemViewModel
                 {
-                    Name = i.Service?.Name ?? i.Part?.Name ?? "Unknown",
-                    Type = i.ServiceId.HasValue ? "Service" : "Part",
+                    Name = i.Service?.Name ?? i.Part?.Name ?? "Nieznane",
+                    Type = i.ServiceId.HasValue ? "Usługa" : "Część",
                     Quantity = i.Quantity,
                     UnitPrice = i.UnitPrice,
                     TotalPrice = i.Quantity * i.UnitPrice

@@ -10,6 +10,16 @@
         ServiceOrderStatus.Cancelled => "bg-secondary",
         _ => "bg-secondary"
     };
+
+    var statusText = Model switch
+    {
+        ServiceOrderStatus.Pending => "Oczekujące",
+        ServiceOrderStatus.Accepted => "Przyjęte",
+        ServiceOrderStatus.InProgress => "W trakcie",
+        ServiceOrderStatus.Completed => "Zakończone",
+        ServiceOrderStatus.Cancelled => "Anulowane",
+        _ => Model.ToString()
+    };
 }
 
-<span class="badge @badgeClass">@Model</span>
+<span class="badge @badgeClass">@statusText</span>

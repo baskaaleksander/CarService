@@ -60,8 +60,8 @@ namespace CarService.Controllers
 
             var items = order.Items.Select(i => new ServiceOrderItemViewModel
             {
-                Name = i.Service?.Name ?? i.Part?.Name ?? "Unknown",
-                Type = i.ServiceId.HasValue ? "Service" : "Part",
+                Name = i.Service?.Name ?? i.Part?.Name ?? "Nieznane",
+                Type = i.ServiceId.HasValue ? "Usługa" : "Część",
                 Quantity = i.Quantity,
                 UnitPrice = i.UnitPrice,
                 TotalPrice = i.Quantity * i.UnitPrice
@@ -101,7 +101,7 @@ namespace CarService.Controllers
 
             if (!await _reviewService.CanReviewOrderAsync(id, userId))
             {
-                TempData["Error"] = "Cannot add review to this order.";
+                TempData["Error"] = "Nie można dodać opinii do tego zlecenia.";
                 return RedirectToAction(nameof(Details), new { id });
             }
 
@@ -140,7 +140,7 @@ namespace CarService.Controllers
             };
 
             await _reviewService.CreateAsync(review);
-            TempData["Success"] = "Thank you for your review!";
+            TempData["Success"] = "Dziękujemy za opinię!";
             return RedirectToAction(nameof(Details), new { id });
         }
     }

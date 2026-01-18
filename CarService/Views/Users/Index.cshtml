@@ -1,24 +1,24 @@
 @model List<(ApplicationUser User, IList<string> Roles)>
 @{
-    ViewData["Title"] = "User Management";
+    ViewData["Title"] = "Zarządzanie użytkownikami";
 }
 
-<h1><i class="bi bi-people"></i> User Management</h1>
+<h1><i class="bi bi-people"></i> Zarządzanie użytkownikami</h1>
 <hr />
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">No users found.</div>
+    <div class="alert alert-info">Brak użytkowników.</div>
 }
 else
 {
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th>Email</th>
-                <th>Name</th>
-                <th>Current Roles</th>
-                <th>Actions</th>
+                <th>E-mail</th>
+                <th>Imię i nazwisko</th>
+                <th>Aktualne role</th>
+                <th>Akcje</th>
             </tr>
         </thead>
         <tbody>
@@ -33,13 +33,13 @@ else
                             @switch (role)
                             {
                                 case "Admin":
-                                    <span class="badge bg-danger me-1">Admin</span>
+                                    <span class="badge bg-danger me-1">Administrator</span>
                                     break;
                                 case "Mechanic":
-                                    <span class="badge bg-primary me-1">Mechanic</span>
+                                    <span class="badge bg-primary me-1">Mechanik</span>
                                     break;
                                 case "Client":
-                                    <span class="badge bg-success me-1">Client</span>
+                                    <span class="badge bg-success me-1">Klient</span>
                                     break;
                                 default:
                                     <span class="badge bg-secondary me-1">@role</span>
@@ -48,12 +48,12 @@ else
                         }
                         @if (!roles.Any())
                         {
-                            <span class="text-muted">No roles</span>
+                            <span class="text-muted">Brak ról</span>
                         }
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-pencil"></i> Change Role
+                            <i class="bi bi-pencil"></i> Zmień rolę
                         </a>
                     </td>
                 </tr>

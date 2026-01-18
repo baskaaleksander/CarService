@@ -1,7 +1,7 @@
 @if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger">
-        <h5 class="alert-heading"><i class="bi bi-exclamation-triangle"></i> Please correct the following errors:</h5>
+        <h5 class="alert-heading"><i class="bi bi-exclamation-triangle"></i> Popraw następujące błędy:</h5>
         <ul class="mb-0">
             @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
             {

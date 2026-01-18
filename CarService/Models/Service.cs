@@ -7,22 +7,22 @@ namespace CarService.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Service name is required")]
-        [StringLength(100, ErrorMessage = "Service name cannot exceed 100 characters")]
-        [Display(Name = "Service Name")]
+        [Required(ErrorMessage = "Nazwa usługi jest wymagana")]
+        [StringLength(100, ErrorMessage = "Nazwa usługi nie może przekraczać 100 znaków")]
+        [Display(Name = "Nazwa usługi")]
         public string Name { get; set; } = string.Empty;
 
-        [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters")]
-        [Display(Name = "Description")]
+        [StringLength(500, ErrorMessage = "Opis nie może przekraczać 500 znaków")]
+        [Display(Name = "Opis")]
         public string? Description { get; set; }
 
-        [Required(ErrorMessage = "Price is required")]
-        [Range(0.01, 100000, ErrorMessage = "Price must be between 0.01 and 100,000")]
+        [Required(ErrorMessage = "Cena jest wymagana")]
+        [Range(0.01, 100000, ErrorMessage = "Cena musi być w zakresie od 0,01 do 100 000")]
         [DataType(DataType.Currency)]
-        [Display(Name = "Price")]
+        [Display(Name = "Cena")]
         public decimal Price { get; set; }
 
-        [Display(Name = "Active")]
+        [Display(Name = "Aktywna")]
         public bool IsActive { get; set; } = true;
 
         public ICollection<ServiceOrderItem> ServiceOrderItems { get; set; } = new List<ServiceOrderItem>();

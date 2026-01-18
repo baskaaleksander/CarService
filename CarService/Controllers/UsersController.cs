@@ -42,7 +42,7 @@ namespace CarService.Controllers
         public async Task<IActionResult> Edit(string userId, string newRole)
         {
             await _userService.ChangeRoleAsync(userId, newRole);
-            TempData["Success"] = "User role updated successfully.";
+            TempData["Success"] = "Rola użytkownika została zaktualizowana pomyślnie.";
             return RedirectToAction(nameof(Index));
         }
 

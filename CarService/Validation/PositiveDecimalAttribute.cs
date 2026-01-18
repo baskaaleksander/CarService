@@ -8,7 +8,7 @@ namespace CarService.Validation
 
         public PositiveDecimalAttribute()
         {
-            ErrorMessage = "Value must be a positive number";
+            ErrorMessage = "Wartość musi być dodatnia";
         }
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
@@ -27,12 +27,12 @@ namespace CarService.Validation
             else if (value is int i)
                 decimalValue = i;
             else if (!decimal.TryParse(value.ToString(), out decimalValue))
-                return new ValidationResult("Value must be a valid number");
+                return new ValidationResult("Wartość musi być poprawną liczbą");
 
             if (decimalValue < (decimal)Minimum)
             {
-                var fieldName = validationContext.DisplayName ?? validationContext.MemberName ?? "Value";
-                return new ValidationResult(ErrorMessage ?? $"{fieldName} must be at least {Minimum}");
+                var fieldName = validationContext.DisplayName ?? validationContext.MemberName ?? "Wartość";
+                return new ValidationResult(ErrorMessage ?? $"{fieldName} musi wynosić co najmniej {Minimum}");
             }
 
             return ValidationResult.Success;

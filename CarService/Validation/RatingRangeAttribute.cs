@@ -9,7 +9,7 @@ namespace CarService.Validation
 
         public RatingRangeAttribute()
         {
-            ErrorMessage = "Rating must be between 1 and 5 stars";
+            ErrorMessage = "Ocena musi być w zakresie od 1 do 5 gwiazdek";
         }
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
@@ -20,11 +20,11 @@ namespace CarService.Validation
             if (value is not int rating)
             {
                 if (!int.TryParse(value.ToString(), out rating))
-                    return new ValidationResult("Rating must be a valid integer");
+                    return new ValidationResult("Ocena musi być poprawną liczbą całkowitą");
             }
 
             if (rating < Minimum || rating > Maximum)
-                return new ValidationResult(ErrorMessage ?? $"Rating must be between {Minimum} and {Maximum} stars");
+                return new ValidationResult(ErrorMessage ?? $"Ocena musi być w zakresie od {Minimum} do {Maximum} gwiazdek");
 
             return ValidationResult.Success;
         }

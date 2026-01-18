@@ -1,9 +1,9 @@
 @model ServiceOrder
 @{
-    ViewData["Title"] = "Create Service Order";
+    ViewData["Title"] = "Utwórz zlecenie serwisowe";
 }
 
-<h1><i class="bi bi-clipboard-plus"></i> Create Service Order</h1>
+<h1><i class="bi bi-clipboard-plus"></i> Utwórz zlecenie serwisowe</h1>
 <hr />
 
 <partial name="_ValidationSummary" />
@@ -12,22 +12,22 @@
     <div class="col-md-6">
         <form asp-action="Create" method="post">
             <div class="mb-3">
-                <label asp-for="VehicleId" class="form-label">Vehicle</label>
+                <label asp-for="VehicleId" class="form-label">Pojazd</label>
                 <select asp-for="VehicleId" asp-items="@ViewBag.Vehicles" class="form-select">
-                    <option value="">-- Select a vehicle --</option>
+                    <option value="">-- Wybierz pojazd --</option>
                 </select>
                 <span asp-validation-for="VehicleId" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="DiagnosticNotes" class="form-label">Notes (optional)</label>
-                <textarea asp-for="DiagnosticNotes" class="form-control" rows="4" placeholder="Describe the issue or service needed..."></textarea>
+                <label asp-for="DiagnosticNotes" class="form-label">Notatki (opcjonalnie)</label>
+                <textarea asp-for="DiagnosticNotes" class="form-control" rows="4" placeholder="Opisz problem lub potrzebną usługę..."></textarea>
                 <span asp-validation-for="DiagnosticNotes" class="text-danger"></span>
             </div>
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-plus-lg"></i> Create Order
+                    <i class="bi bi-plus-lg"></i> Utwórz zlecenie
                 </button>
-                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                <a asp-action="Index" class="btn btn-outline-secondary">Anuluj</a>
             </div>
         </form>
     </div>

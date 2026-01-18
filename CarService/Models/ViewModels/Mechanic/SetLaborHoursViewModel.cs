@@ -7,8 +7,9 @@ namespace CarService.Models.ViewModels.Mechanic
         public int OrderId { get; set; }
         public decimal CurrentHours { get; set; }
 
-        [Required]
-        [Range(0.25, 1000, ErrorMessage = "Hours must be at least 0.25")]
+        [Required(ErrorMessage = "Godziny pracy są wymagane")]
+        [Range(0.25, 1000, ErrorMessage = "Godziny pracy muszą być w zakresie od 0,25 do 1000")]
+        [Display(Name = "Godziny pracy")]
         public decimal Hours { get; set; }
     }
 }
